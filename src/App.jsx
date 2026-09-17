@@ -1,23 +1,10 @@
 import { useMemo, useState } from 'react'
 
-const palette = {
-  primary: '#1D4ED8',
-  link: '#1E40AF',
-  event: '#EEF2FE',
-  selected: '#F1F1F4',
-  page: '#FAFAFA',
-  surface: '#FFFFFF',
-  border: '#E5E7EB',
-  text: '#18181B',
-  muted: '#71717A',
-  amberText: '#B45309',
-  amberBg: '#FEF3C7',
-}
-
 const installersSeed = [
   {
     id: 'ray',
     name: 'Ray Morales',
+    type: 'Contractor',
     specialty: 'Carpet and resilient',
     phone: '(732) 555-0132',
     rates: [
@@ -31,6 +18,7 @@ const installersSeed = [
   {
     id: 'tony',
     name: 'Tony Vasquez',
+    type: 'Contractor',
     specialty: 'LVP and carpet',
     phone: '(732) 555-0198',
     rates: [
@@ -44,9 +32,10 @@ const installersSeed = [
   {
     id: 'dave',
     name: 'Dave Kalinowski',
+    type: 'Employee',
     specialty: 'Sand & stain only',
     phone: '(732) 555-0185',
-    rates: [{ task: 'sand & finish', unit: 'sq ft', rate: 3.25 }],
+    rates: [{ task: 'sand & finish', unit: 'hour', rate: 52 }],
   },
 ]
 
@@ -58,7 +47,8 @@ const jobsSeed = [
     fullDate: 'Monday, Mar 9',
     time: '8:00 AM',
     customer: 'M. Serrano',
-    address: '14 Chestnut Ln, Edison NJ',
+    contact: 'M. Serrano',
+    address: '14 Chestnut Ln, Edison, NJ 08820',
     product: 'Mohawk Karastan carpet',
     qty: 92,
     unit: 'sq yd',
@@ -76,7 +66,8 @@ const jobsSeed = [
     fullDate: 'Monday, Mar 9',
     time: '11:30 AM',
     customer: 'R. Patel',
-    address: '318 Talmadge Rd, Edison NJ',
+    contact: 'R. Patel',
+    address: '318 Talmadge Rd, Edison, NJ 08817',
     product: 'Shaw LVP',
     qty: 640,
     unit: 'sq ft',
@@ -90,8 +81,9 @@ const jobsSeed = [
     date: 'Mar 10',
     fullDate: 'Tuesday, Mar 10',
     time: '9:00 AM',
-    customer: 'Greenbrook Apts #204',
-    address: '1100 Oak Tree Rd',
+    customer: 'Greenbrook Apartments - Unit 204',
+    contact: 'Denise Ruiz, Property Manager',
+    address: '1100 Oak Tree Rd, Edison, NJ 08820',
     product: 'Shaw commercial carpet',
     qty: 55,
     unit: 'sq yd',
@@ -109,7 +101,8 @@ const jobsSeed = [
     fullDate: 'Wednesday, Mar 11',
     time: '8:30 AM',
     customer: 'J. Whitman',
-    address: '7 Fairview Ave, Metuchen NJ',
+    contact: 'J. Whitman',
+    address: '7 Fairview Ave, Metuchen, NJ 08840',
     product: 'Masland carpet',
     qty: 74,
     unit: 'sq yd',
@@ -124,7 +117,8 @@ const jobsSeed = [
     fullDate: 'Thursday, Mar 12',
     time: '10:00 AM',
     customer: 'L. Okafor',
-    address: '229 Grove St, Edison NJ',
+    contact: 'L. Okafor',
+    address: '229 Grove St, Edison, NJ 08820',
     product: 'Mannington LVP',
     qty: 410,
     unit: 'sq ft',
@@ -133,13 +127,35 @@ const jobsSeed = [
     expected: [{ task: 'install', qty: 410 }],
   },
   {
+    id: 'WO-1054',
+    day: 'Thu',
+    date: 'Mar 12',
+    fullDate: 'Thursday, Mar 12',
+    time: '1:30 PM',
+    customer: 'K. Brennan',
+    contact: 'K. Brennan',
+    address: '41 Denman Ave, Edison, NJ 08820',
+    product: 'Mohawk carpet + hardwood stairs sand & finish',
+    qty: 64,
+    unit: 'sq yd',
+    installerId: 'ray',
+    additionalInstallers: ['dave'],
+    status: 'Completed',
+    expected: [
+      { task: 'install', qty: 64 },
+      { task: 'rip-up', qty: 64 },
+    ],
+    sharedWork: [{ installerId: 'dave', task: 'sand & finish', qty: 48, unit: 'sq ft' }],
+  },
+  {
     id: 'WO-1053',
     day: 'Fri',
     date: 'Mar 13',
     fullDate: 'Friday, Mar 13',
     time: '8:00 AM',
     customer: 'D. Feldman',
-    address: '55 Woodbridge Ave, Edison NJ',
+    contact: 'D. Feldman',
+    address: '55 Woodbridge Ave, Edison, NJ 08817',
     product: 'Mohawk carpet',
     qty: 120,
     unit: 'sq yd',
@@ -149,28 +165,26 @@ const jobsSeed = [
   },
 ]
 
-const rayInvoiceSeed = {
-  installerId: 'ray',
-  week: 'Mar 9-13',
-  status: 'Draft',
-  jobs: {
-    'WO-1048': [
-      { task: 'install', planned: 92, actual: 92, note: '' },
-      { task: 'rip-up', planned: 18, actual: 18, note: '' },
-      { task: 'stairs', planned: 0, actual: 4, note: 'added on site' },
-    ],
-    'WO-1050': [
-      { task: 'install', planned: 55, actual: 55, note: '' },
-      { task: 'wall base', planned: 26, actual: 26, note: '' },
-      { task: 'furniture move', planned: 0, actual: 2, note: 'added on site' },
-      { task: 'wall base', planned: 0, actual: 80, note: 'added on site' },
-    ],
-    'WO-1051': [
-      { task: 'install', planned: 74, actual: 71, note: 'less than planned' },
-      { task: 'install', planned: 0, actual: 20, note: 'added on site' },
-      { task: 'wall base', planned: 0, actual: 38, note: 'added on site' },
-    ],
-  },
+const invoiceLinesSeed = {
+  'WO-1048': [
+    { task: 'install', planned: 92, actual: 92 },
+    { task: 'rip-up', planned: 18, actual: 18 },
+    { task: 'stairs', planned: 0, actual: 4 },
+  ],
+  'WO-1050': [
+    { task: 'install', planned: 55, actual: 55 },
+    { task: 'wall base', planned: 26, actual: 26 },
+    { task: 'furniture move', planned: 0, actual: 2 },
+    { task: 'wall base', planned: 0, actual: 80 },
+  ],
+  'WO-1051': [
+    { task: 'install', planned: 74, actual: 71 },
+    { task: 'wall base', planned: 0, actual: 38 },
+  ],
+  'WO-1054': [
+    { task: 'install', planned: 64, actual: 64 },
+    { task: 'rip-up', planned: 64, actual: 64 },
+  ],
 }
 
 const navGroups = [
@@ -181,34 +195,55 @@ const navGroups = [
 ]
 
 const storeTabs = ['Jobs', 'Installers', 'Invoices']
+const jobStatuses = ['Scheduled', 'Dispatched', 'Completed']
+
 const money = (value) =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 
 function App() {
   const [role, setRole] = useState('store')
   const [storeTab, setStoreTab] = useState('Invoices')
+  const [jobs, setJobs] = useState(jobsSeed)
   const [selectedJobId, setSelectedJobId] = useState('WO-1051')
   const [selectedInstallerId, setSelectedInstallerId] = useState('ray')
+  const [invoiceInstallerId, setInvoiceInstallerId] = useState('ray')
+  const [invoiceJobIds, setInvoiceJobIds] = useState(['WO-1048', 'WO-1050', 'WO-1051', 'WO-1054'])
+  const [selectedReadyIds, setSelectedReadyIds] = useState(['WO-1054'])
   const [invoiceStatus, setInvoiceStatus] = useState('Draft')
   const [installerJobId, setInstallerJobId] = useState(null)
   const [actuals, setActuals] = useState({ install: 120 })
   const [addedTask, setAddedTask] = useState('')
 
-  const installers = installersSeed
-  const jobs = jobsSeed
   const selectedJob = jobs.find((job) => job.id === selectedJobId) ?? jobs[0]
   const selectedInstaller =
-    installers.find((installer) => installer.id === selectedInstallerId) ?? installers[0]
+    installersSeed.find((installer) => installer.id === selectedInstallerId) ?? installersSeed[0]
+  const invoiceInstaller =
+    installersSeed.find((installer) => installer.id === invoiceInstallerId) ?? installersSeed[0]
+  const contractorInstallers = installersSeed.filter((installer) => installer.type === 'Contractor')
+  const readyJobs = jobs.filter(
+    (job) => job.status === 'Completed' && job.installerId === invoiceInstaller.id,
+  )
+  const invoice = useMemo(
+    () => buildInvoice(invoiceJobIds, jobs, invoiceInstaller),
+    [invoiceJobIds, jobs, invoiceInstaller],
+  )
 
-  const invoice = useMemo(() => {
-    return buildInvoice(rayInvoiceSeed, jobs, installers.find((installer) => installer.id === 'ray'))
-  }, [jobs, installers])
+  const updateJobStatus = (jobId, status) => {
+    setJobs((currentJobs) =>
+      currentJobs.map((job) => (job.id === jobId ? { ...job, status } : job)),
+    )
+  }
+
+  const addSelectedToInvoice = () => {
+    setInvoiceJobIds((currentIds) => [...new Set([...currentIds, ...selectedReadyIds])])
+    setSelectedReadyIds([])
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#18181B]">
       {role === 'store' ? (
-        <StoreShell role={role} setRole={setRole}>
-          <TopBar role={role} setRole={setRole} />
+        <StoreShell>
+          <TopBar role={role} setRole={setRole} jobCount={jobs.length} />
           <main className="px-8 pb-8">
             <div className="mb-5 flex items-center justify-between">
               <div className="flex rounded-md border border-[#E5E7EB] bg-white p-1">
@@ -238,16 +273,17 @@ function App() {
             {storeTab === 'Jobs' && (
               <JobsView
                 jobs={jobs}
-                installers={installers}
+                installers={installersSeed}
                 selectedJob={selectedJob}
                 setSelectedJobId={setSelectedJobId}
                 setStoreTab={setStoreTab}
+                updateJobStatus={updateJobStatus}
               />
             )}
             {storeTab === 'Installers' && (
               <InstallersView
                 jobs={jobs}
-                installers={installers}
+                installers={installersSeed}
                 selectedInstaller={selectedInstaller}
                 setSelectedInstallerId={setSelectedInstallerId}
               />
@@ -257,6 +293,13 @@ function App() {
                 invoice={invoice}
                 status={invoiceStatus}
                 onApprove={() => setInvoiceStatus('Approved')}
+                contractorInstallers={contractorInstallers}
+                invoiceInstaller={invoiceInstaller}
+                setInvoiceInstallerId={setInvoiceInstallerId}
+                readyJobs={readyJobs}
+                selectedReadyIds={selectedReadyIds}
+                setSelectedReadyIds={setSelectedReadyIds}
+                addSelectedToInvoice={addSelectedToInvoice}
               />
             )}
           </main>
@@ -266,7 +309,7 @@ function App() {
           role={role}
           setRole={setRole}
           jobs={jobs}
-          installer={installers[0]}
+          installer={installersSeed[0]}
           selectedJobId={installerJobId}
           setSelectedJobId={setInstallerJobId}
           actuals={actuals}
@@ -336,7 +379,7 @@ function StoreShell({ children }) {
   )
 }
 
-function TopBar({ role, setRole }) {
+function TopBar({ role, setRole, jobCount }) {
   return (
     <header className="border-b border-[#E5E7EB] bg-[#FAFAFA] px-8 py-5">
       <div className="flex items-start justify-between">
@@ -362,7 +405,7 @@ function TopBar({ role, setRole }) {
           </button>
         </div>
       </div>
-      <p className="mt-3 text-right text-sm text-[#71717A]">6 jobs this week</p>
+      <p className="mt-3 text-right text-sm text-[#71717A]">{jobCount} jobs this week</p>
     </header>
   )
 }
@@ -385,7 +428,14 @@ function RoleToggle({ role, setRole }) {
   )
 }
 
-function JobsView({ jobs, installers, selectedJob, setSelectedJobId, setStoreTab }) {
+function JobsView({
+  jobs,
+  installers,
+  selectedJob,
+  setSelectedJobId,
+  setStoreTab,
+  updateJobStatus,
+}) {
   return (
     <div className="grid grid-cols-[1fr_360px] gap-5">
       <section className="rounded-md border border-[#E5E7EB] bg-white">
@@ -411,6 +461,9 @@ function JobsView({ jobs, installers, selectedJob, setSelectedJobId, setStoreTab
           <tbody>
             {jobs.map((job) => {
               const installer = installers.find((person) => person.id === job.installerId)
+              const extraInstallers = (job.additionalInstallers ?? [])
+                .map((id) => installers.find((person) => person.id === id))
+                .filter(Boolean)
               return (
                 <tr
                   key={job.id}
@@ -430,9 +483,23 @@ function JobsView({ jobs, installers, selectedJob, setSelectedJobId, setStoreTab
                   <td className="px-4 py-3">
                     {job.qty} {job.unit}
                   </td>
-                  <td className="px-4 py-3">{installer?.name}</td>
+                  <td className="space-y-1 px-4 py-3">
+                    <NameWithType person={installer} />
+                    {extraInstallers.map((person) => (
+                      <NameWithType key={person.id} person={person} />
+                    ))}
+                  </td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={job.status} />
+                    <select
+                      value={job.status}
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={(event) => updateJobStatus(job.id, event.target.value)}
+                      className="rounded-md border border-[#E5E7EB] bg-white px-2 py-1 text-xs font-semibold"
+                    >
+                      {jobStatuses.map((status) => (
+                        <option key={status}>{status}</option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               )
@@ -452,6 +519,9 @@ function WorkOrder({ job, installers, setStoreTab }) {
     return { ...item, rate: rate?.rate ?? 0, unit: rate?.unit ?? job.unit }
   })
   const total = rows.reduce((sum, row) => sum + row.rate * row.qty, 0)
+  const sharedPeople = (job.additionalInstallers ?? [])
+    .map((id) => installers.find((person) => person.id === id))
+    .filter(Boolean)
 
   return (
     <aside className="rounded-md border border-[#E5E7EB] bg-white">
@@ -465,11 +535,28 @@ function WorkOrder({ job, installers, setStoreTab }) {
       <div className="space-y-4 p-4 text-sm">
         <div>
           <p className="font-semibold">{job.customer}</p>
+          <p className="text-[#71717A]">{job.contact}</p>
           <p className="text-[#71717A]">{job.address}</p>
           <p className="mt-2">{job.fullDate}</p>
           <p>
             {job.product} · {job.qty} {job.unit}
           </p>
+        </div>
+        <div className="rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-3">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#71717A]">
+            Assigned installer
+          </p>
+          <NameWithType person={installer} />
+          {sharedPeople.map((person) => (
+            <div key={person.id} className="mt-2">
+              <NameWithType person={person} />
+            </div>
+          ))}
+          {job.sharedWork?.map((work) => (
+            <p key={`${work.installerId}-${work.task}`} className="mt-2 text-xs text-[#71717A]">
+              {work.task} · {work.qty} {work.unit}
+            </p>
+          ))}
         </div>
         <table className="w-full text-left">
           <thead className="text-xs uppercase text-[#71717A]">
@@ -484,7 +571,9 @@ function WorkOrder({ job, installers, setStoreTab }) {
             {rows.map((row) => (
               <tr key={`${job.id}-${row.task}`} className="border-t border-[#E5E7EB]">
                 <td className="py-2 capitalize">{row.task}</td>
-                <td>{money(row.rate)}</td>
+                <td>
+                  {money(row.rate)}/{row.unit}
+                </td>
                 <td>{row.qty}</td>
                 <td className="text-right">{money(row.rate * row.qty)}</td>
               </tr>
@@ -499,7 +588,9 @@ function WorkOrder({ job, installers, setStoreTab }) {
           Assign installer
           <select className="mt-1 w-full rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-normal normal-case text-[#18181B]">
             {installers.map((person) => (
-              <option key={person.id}>{person.name}</option>
+              <option key={person.id}>
+                {person.name} - {person.type}
+              </option>
             ))}
           </select>
         </label>
@@ -523,7 +614,11 @@ function WorkOrder({ job, installers, setStoreTab }) {
 }
 
 function InstallersView({ installers, jobs, selectedInstaller, setSelectedInstallerId }) {
-  const installerJobs = jobs.filter((job) => job.installerId === selectedInstaller.id)
+  const installerJobs = jobs.filter(
+    (job) =>
+      job.installerId === selectedInstaller.id ||
+      (job.additionalInstallers ?? []).includes(selectedInstaller.id),
+  )
   return (
     <div className="grid grid-cols-[300px_1fr] gap-5">
       <section className="rounded-md border border-[#E5E7EB] bg-white p-3">
@@ -536,15 +631,15 @@ function InstallersView({ installers, jobs, selectedInstaller, setSelectedInstal
               installer.id === selectedInstaller.id ? 'bg-[#F1F1F4]' : 'hover:bg-[#FAFAFA]'
             }`}
           >
-            <p className="font-semibold">{installer.name}</p>
-            <p className="text-sm text-[#71717A]">{installer.specialty}</p>
+            <NameWithType person={installer} />
+            <p className="mt-1 text-sm text-[#71717A]">{installer.specialty}</p>
           </button>
         ))}
       </section>
       <section className="rounded-md border border-[#E5E7EB] bg-white">
         <div className="border-b border-[#E5E7EB] p-4">
-          <h2 className="font-semibold">{selectedInstaller.name}</h2>
-          <p className="text-sm text-[#71717A]">{selectedInstaller.phone}</p>
+          <NameWithType person={selectedInstaller} large />
+          <p className="mt-1 text-sm text-[#71717A]">{selectedInstaller.phone}</p>
         </div>
         <div className="grid grid-cols-[1fr_320px] gap-5 p-4">
           <div>
@@ -563,7 +658,7 @@ function InstallersView({ installers, jobs, selectedInstaller, setSelectedInstal
                 {selectedInstaller.rates.map((rate) => (
                   <tr key={rate.task} className="border-b border-[#E5E7EB] last:border-0">
                     <td className="py-2 capitalize">{rate.task}</td>
-                    <td>{rate.unit}</td>
+                    <td>/{rate.unit}</td>
                     <td>
                       <input
                         aria-label={`${rate.task} rate`}
@@ -584,9 +679,11 @@ function InstallersView({ installers, jobs, selectedInstaller, setSelectedInstal
             <MiniList
               title="Past invoices"
               items={
-                selectedInstaller.id === 'ray'
-                  ? ['INV-3901 · Mar 9-13 · Draft', 'INV-3894 · Mar 2-6 · Approved']
-                  : ['INV-3899 · Mar 9-13 · Approved']
+                selectedInstaller.type === 'Employee'
+                  ? ['Payroll employee · no installer invoices']
+                  : selectedInstaller.id === 'ray'
+                    ? ['INV-3901 · Mar 9-13 · Draft', 'INV-3894 · Mar 2-6 · Approved']
+                    : ['INV-3899 · Mar 9-13 · Approved']
               }
             />
           </div>
@@ -596,7 +693,18 @@ function InstallersView({ installers, jobs, selectedInstaller, setSelectedInstal
   )
 }
 
-function InvoicesView({ invoice, status, onApprove }) {
+function InvoicesView({
+  invoice,
+  status,
+  onApprove,
+  contractorInstallers,
+  invoiceInstaller,
+  setInvoiceInstallerId,
+  readyJobs,
+  selectedReadyIds,
+  setSelectedReadyIds,
+  addSelectedToInvoice,
+}) {
   return (
     <div className="grid grid-cols-[1fr_360px] gap-5">
       <section className="rounded-md border border-[#E5E7EB] bg-white">
@@ -607,13 +715,23 @@ function InvoicesView({ invoice, status, onApprove }) {
               <h2 className="font-semibold">Weekly invoice reconciliation</h2>
             </div>
             <p className="mt-1 text-sm text-[#71717A]">
-              One invoice for Ray Morales covering all completed jobs this week.
+              One invoice for <NameWithType person={invoiceInstaller} inline /> covering completed contractor work.
+            </p>
+            <p className="mt-2 text-sm text-[#71717A]">
+              Employees are paid through payroll and do not appear here.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <select className="rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm">
-              <option>Ray Morales</option>
-              <option>Tony Vasquez</option>
+            <select
+              value={invoiceInstaller.id}
+              onChange={(event) => setInvoiceInstallerId(event.target.value)}
+              className="rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm"
+            >
+              {contractorInstallers.map((installer) => (
+                <option key={installer.id} value={installer.id}>
+                  {installer.name} - {installer.type}
+                </option>
+              ))}
             </select>
             <select className="rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm">
               <option>Week of Mar 9</option>
@@ -633,47 +751,14 @@ function InvoicesView({ invoice, status, onApprove }) {
                 </div>
                 <span className="text-sm font-semibold text-[#1E40AF]">{job.id}</span>
               </div>
-              <table className="w-full text-left text-sm">
-                <thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]">
-                  <tr>
-                    {['Task', 'Planned qty', 'Actual qty', 'Rate', 'Amount'].map((heading) => (
-                      <th key={heading} className="px-4 py-2 font-semibold">
-                        {heading}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {job.lines.map((line, index) => {
-                    const variant = line.actual !== line.planned || line.planned === 0
-                    return (
-                      <tr
-                        key={`${job.id}-${line.task}-${index}`}
-                        className={`border-b border-[#E5E7EB] last:border-0 ${
-                          variant ? 'bg-[#FEF3C7] text-[#B45309]' : ''
-                        }`}
-                      >
-                        <td className="px-4 py-2">
-                          <span className="capitalize">{line.task}</span>
-                          {line.note && <span className="ml-2 text-xs font-semibold">{line.note}</span>}
-                        </td>
-                        <td className="px-4 py-2">{line.planned}</td>
-                        <td className="px-4 py-2 font-semibold">{line.actual}</td>
-                        <td className="px-4 py-2">{money(line.rate)}</td>
-                        <td className="px-4 py-2 font-semibold">{money(line.amount)}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+              <InvoiceTable lines={job.lines} />
             </div>
           ))}
-          <div className="flex items-center justify-between rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4">
+          <div className="rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4">
             <p className="font-semibold">
-              Planned {money(invoice.planned)} · Actual {money(invoice.actual)} · Difference{' '}
-              {money(invoice.actual - invoice.planned)}
+              Planned {money(invoice.planned)} · Quantity variance {money(invoice.quantityVariance)} · Added on
+              site {money(invoice.addedOnSite)} · Total {money(invoice.total)}
             </p>
-            <p className="text-xl font-bold">{money(invoice.actual)}</p>
           </div>
           <div className="flex justify-end gap-2">
             <button className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 font-semibold">
@@ -688,46 +773,153 @@ function InvoicesView({ invoice, status, onApprove }) {
           </div>
         </div>
       </section>
-      <StagingPanel status={status} invoice={invoice} />
+      <StagingPanel
+        readyJobs={readyJobs}
+        invoiceInstaller={invoiceInstaller}
+        selectedReadyIds={selectedReadyIds}
+        setSelectedReadyIds={setSelectedReadyIds}
+        addSelectedToInvoice={addSelectedToInvoice}
+      />
     </div>
   )
 }
 
-function StagingPanel({ status, invoice }) {
+function InvoiceTable({ lines }) {
+  return (
+    <table className="w-full text-left text-sm">
+      <thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]">
+        <tr>
+          {['Task', 'Planned qty', 'Actual qty', 'Rate', 'Amount'].map((heading) => (
+            <th key={heading} className="px-4 py-2 font-semibold">
+              {heading}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {lines.map((line, index) => {
+          const added = line.planned === 0
+          const quantityVariance = line.planned > 0 && line.actual !== line.planned
+          const delta = line.actual - line.planned
+          return (
+            <tr
+              key={`${line.task}-${index}`}
+              className={`border-b border-[#E5E7EB] last:border-0 ${
+                added ? 'bg-[#FEF3C7] text-[#B45309]' : ''
+              }`}
+            >
+              <td className="px-4 py-2">
+                <span className="capitalize">{line.task}</span>
+                {added && (
+                  <span className="ml-2 rounded bg-white/70 px-2 py-1 text-xs font-semibold text-[#B45309]">
+                    Added on site
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-2">{line.planned}</td>
+              <td className="px-4 py-2">
+                {quantityVariance ? (
+                  <span>
+                    <strong>{line.actual}</strong>{' '}
+                    <span className="text-[#71717A]">
+                      {delta > 0 ? '▲' : '▼'} {delta > 0 ? `+${delta}` : delta}
+                    </span>
+                  </span>
+                ) : (
+                  <strong>{line.actual}</strong>
+                )}
+              </td>
+              <td className="px-4 py-2">
+                {money(line.rate)}/{line.unit}
+              </td>
+              <td className="px-4 py-2 font-semibold">{money(line.amount)}</td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+}
+
+function StagingPanel({
+  readyJobs,
+  invoiceInstaller,
+  selectedReadyIds,
+  setSelectedReadyIds,
+  addSelectedToInvoice,
+}) {
+  const toggleJob = (jobId) => {
+    setSelectedReadyIds((currentIds) =>
+      currentIds.includes(jobId)
+        ? currentIds.filter((id) => id !== jobId)
+        : [...currentIds, jobId],
+    )
+  }
+
+  const toggleAll = () => {
+    setSelectedReadyIds(
+      selectedReadyIds.length === readyJobs.length ? [] : readyJobs.map((job) => job.id),
+    )
+  }
+
   return (
     <aside className="rounded-md border border-[#E5E7EB] bg-white">
       <div className="border-b border-[#E5E7EB] p-4">
         <div className="flex items-center gap-2">
-          <Icon name="staging" />
-          <h2 className="font-semibold">{status === 'Approved' ? 'Payables' : 'Awaiting invoice'}</h2>
+          <Icon name="Ready" />
+          <h2 className="font-semibold">Ready to invoice</h2>
         </div>
         <p className="mt-1 text-sm text-[#71717A]">
-          {status === 'Approved'
-            ? '1 approved installer invoice ready to pay'
-            : '3 jobs completed, not yet invoiced'}
+          {readyJobs.length} completed jobs not yet on an invoice.
         </p>
         <div className="mt-3 rounded-md border border-[#E5E7EB] px-3 py-2 text-sm text-[#71717A]">Search</div>
         <div className="mt-3 flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-[#71717A]">
-            <input type="checkbox" /> Select all
+            <input
+              type="checkbox"
+              checked={readyJobs.length > 0 && selectedReadyIds.length === readyJobs.length}
+              onChange={toggleAll}
+            />
+            Select all
           </label>
-          <button className="rounded border border-[#E5E7EB] px-2 py-1">Sort ▾</button>
+          <button className="rounded border border-[#E5E7EB] px-2 py-1">Completed: oldest ▾</button>
         </div>
       </div>
       <div className="divide-y divide-[#E5E7EB]">
-        {invoice.jobs.map((job) => (
-          <div key={job.id} className="p-4 text-sm">
-            <p className="font-semibold text-[#1E40AF]">
-              {job.id} ↗ <span className="ml-2 text-[#18181B]">{job.customer}</span>
-            </p>
-            <p className="mt-2 font-semibold">✓ Completed {job.date}</p>
-            <p className="mt-1 text-[#52525B]">⌖ {job.address}</p>
-            <p className="mt-1 text-[#52525B]">♙ {job.customer}</p>
-            <p className="mt-2 text-[#71717A]">
-              {money(job.actual)} · {job.qty} {job.unit} · {job.lines.length} tasks
-            </p>
-          </div>
-        ))}
+        {readyJobs.map((job) => {
+          const amount = estimateJobAmount(job, invoiceInstaller)
+          return (
+            <label key={job.id} className="block cursor-pointer p-4 text-sm hover:bg-[#FAFAFA]">
+              <div className="flex gap-3">
+                <input
+                  type="checkbox"
+                  checked={selectedReadyIds.includes(job.id)}
+                  onChange={() => toggleJob(job.id)}
+                  className="mt-1"
+                />
+                <div>
+                  <p className="font-semibold text-[#1E40AF]">
+                    {job.id} ↗ <span className="ml-2 text-[#18181B]">{job.customer}</span>
+                  </p>
+                  <p className="mt-2 font-semibold">◷ Completed {job.date}</p>
+                  <p className="mt-1 text-[#52525B]">⌖ {job.address}</p>
+                  <p className="mt-1 text-[#52525B]">♙ {invoiceInstaller.name}</p>
+                  <p className="mt-2 text-[#71717A]">
+                    {money(amount)} · {job.qty} {job.unit} · {job.expected.length} tasks
+                  </p>
+                </div>
+              </div>
+            </label>
+          )
+        })}
+      </div>
+      <div className="border-t border-[#E5E7EB] p-4">
+        <button
+          onClick={addSelectedToInvoice}
+          className="w-full rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white"
+        >
+          Add to invoice
+        </button>
       </div>
     </aside>
   )
@@ -745,7 +937,11 @@ function InstallerMode({
   addedTask,
   setAddedTask,
 }) {
-  const todaysJobs = jobs.filter((job) => job.installerId === installer.id && ['Completed', 'Dispatched'].includes(job.status))
+  const todaysJobs = jobs.filter(
+    (job) =>
+      (job.installerId === installer.id || (job.additionalInstallers ?? []).includes(installer.id)) &&
+      ['Completed', 'Dispatched'].includes(job.status),
+  )
   const selectedJob = selectedJobId ? jobs.find((job) => job.id === selectedJobId) : null
 
   return (
@@ -753,7 +949,9 @@ function InstallerMode({
       <div className="mb-5 flex w-full max-w-5xl items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Installer</h1>
-          <p className="text-sm text-[#71717A]">Phone view for Ray Morales</p>
+          <div className="mt-1">
+            <NameWithType person={installer} />
+          </div>
         </div>
         <RoleToggle role={role} setRole={setRole} />
       </div>
@@ -839,7 +1037,7 @@ function JobDetail({ job, installer, actuals, setActuals, addedTask, setAddedTas
                 </div>
                 {line.source === 'added' && (
                   <span className="rounded bg-[#FEF3C7] px-2 py-1 text-xs font-semibold text-[#B45309]">
-                    added
+                    Added on site
                   </span>
                 )}
               </div>
@@ -884,6 +1082,32 @@ function JobDetail({ job, installer, actuals, setActuals, addedTask, setAddedTas
   )
 }
 
+function NameWithType({ person, large = false, inline = false }) {
+  if (!person) return null
+  const content = (
+    <>
+      <span className={large ? 'text-lg font-semibold' : 'font-semibold'}>{person.name}</span>
+      <TypeChip type={person.type} />
+    </>
+  )
+  if (inline) return <span className="inline-flex items-center gap-2">{content}</span>
+  return <div className="flex items-center gap-2">{content}</div>
+}
+
+function TypeChip({ type }) {
+  return (
+    <span
+      className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-semibold ${
+        type === 'Employee'
+          ? 'border-[#E5E7EB] bg-[#F1F1F4] text-[#52525B]'
+          : 'border-blue-200 bg-blue-50 text-[#1E40AF]'
+      }`}
+    >
+      {type}
+    </span>
+  )
+}
+
 function MiniList({ title, items }) {
   return (
     <div className="rounded-md border border-[#E5E7EB] p-3">
@@ -922,33 +1146,64 @@ function Icon({ name }) {
   )
 }
 
-function buildInvoice(invoiceSeed, jobs, installer) {
+function buildInvoice(invoiceJobIds, jobs, installer) {
+  if (installer.type !== 'Contractor') {
+    return { jobs: [], planned: 0, quantityVariance: 0, addedOnSite: 0, total: 0 }
+  }
+
   const rateByTask = Object.fromEntries(installer.rates.map((rate) => [rate.task, rate]))
-  const invoiceJobs = Object.entries(invoiceSeed.jobs).map(([jobId, lines]) => {
-    const job = jobs.find((item) => item.id === jobId)
-    const invoiceLines = lines.map((line) => {
-      const rate = rateByTask[line.task]
+  const invoiceJobs = invoiceJobIds
+    .map((jobId) => jobs.find((item) => item.id === jobId))
+    .filter((job) => job && job.status === 'Completed' && job.installerId === installer.id)
+    .map((job) => {
+      const seedLines = invoiceLinesSeed[job.id] ?? job.expected.map((line) => ({
+        task: line.task,
+        planned: line.qty,
+        actual: line.qty,
+      }))
+      const lines = seedLines.map((line) => {
+        const rate = rateByTask[line.task]
+        const plannedAmount = line.planned * rate.rate
+        const amount = line.actual * rate.rate
+        const quantityVariance =
+          line.planned > 0 && line.actual !== line.planned ? amount - plannedAmount : 0
+        const addedOnSite = line.planned === 0 ? amount : 0
+        return {
+          ...line,
+          unit: rate.unit,
+          rate: rate.rate,
+          plannedAmount,
+          amount,
+          quantityVariance,
+          addedOnSite,
+        }
+      })
       return {
-        ...line,
-        unit: rate.unit,
-        rate: rate.rate,
-        plannedAmount: line.planned * rate.rate,
-        amount: line.actual * rate.rate,
+        ...job,
+        lines,
+        planned: lines.reduce((sum, line) => sum + line.plannedAmount, 0),
+        quantityVariance: lines.reduce((sum, line) => sum + line.quantityVariance, 0),
+        addedOnSite: lines.reduce((sum, line) => sum + line.addedOnSite, 0),
+        total: lines.reduce((sum, line) => sum + line.amount, 0),
       }
     })
-    return {
-      ...job,
-      lines: invoiceLines,
-      planned: invoiceLines.reduce((sum, line) => sum + line.plannedAmount, 0),
-      actual: invoiceLines.reduce((sum, line) => sum + line.amount, 0),
-    }
-  })
+
   return {
-    ...invoiceSeed,
     jobs: invoiceJobs,
     planned: invoiceJobs.reduce((sum, job) => sum + job.planned, 0),
-    actual: invoiceJobs.reduce((sum, job) => sum + job.actual, 0),
+    quantityVariance: invoiceJobs.reduce((sum, job) => sum + job.quantityVariance, 0),
+    addedOnSite: invoiceJobs.reduce((sum, job) => sum + job.addedOnSite, 0),
+    total: invoiceJobs.reduce((sum, job) => sum + job.total, 0),
   }
+}
+
+function estimateJobAmount(job, installer) {
+  const rateByTask = Object.fromEntries(installer.rates.map((rate) => [rate.task, rate]))
+  const lines = invoiceLinesSeed[job.id] ?? job.expected.map((line) => ({
+    task: line.task,
+    actual: line.qty,
+  }))
+  return lines.reduce((sum, line) => sum + (rateByTask[line.task]?.rate ?? 0) * line.actual, 0)
 }
 
 export default App
