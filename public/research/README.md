@@ -1,6 +1,6 @@
 # Flooring field research
 
-Field research on the US independent flooring retail market: six interviews across the value chain, a market analysis, and a sales field playbook.
+Field research on the US independent flooring retail market: six interviews across the value chain, market insights, product implications, and a GTM strategy.
 
 This site is served from the same Rundoo deployment as the React app, at **`/research/`**. Use the **App / Research** switcher at the top of any page to go back to the app.
 
@@ -9,8 +9,9 @@ This site is served from the same Rundoo deployment as the React app, at **`/res
 | File | What it is |
 |---|---|
 | `index.html` | Overview and the three findings everything else follows from |
-| `market.html` | Market analysis — size, value chain, software landscape, entry paths |
-| `gtm.html` | Field playbook — what owners read and attend, and how to sell to them |
+| `market.html` | Market insights — size, value chain, and software landscape |
+| `product.html` | Product feature — entry paths and the project layer Rundoo would need |
+| `gtm.html` | GTM strategy — what owners read and attend, and how to sell to them |
 | `transcripts.html` | All sources, anchored so citations link to the exact moment |
 
 Every highlighted passage in the analysis is sourced. Hovering shows the quote it came from; clicking opens the transcript at that anchor. Citation data lives in `assets/app.js` in the `SOURCES` object — add an entry there and reference it with `<cite class="c" data-src="key">`.
