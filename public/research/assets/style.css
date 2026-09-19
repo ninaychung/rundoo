@@ -1,0 +1,328 @@
+/* ---------------------------------------------------------------
+   Rundoo flooring research
+   Motif: the tile grid. Seams as structure, swatches as citations.
+   --------------------------------------------------------------- */
+
+:root{
+  --paper:#FBFAF7;
+  --paper-2:#F3F1EB;
+  --ink:#191917;
+  --slate:#4A5560;
+  --mute:#7C8288;
+  --seam:#DEDAD1;
+  --seam-2:#C9C4B8;
+  --trade:#12508C;
+  --trade-soft:#E8F0F8;
+  --ochre:#B07D22;
+  --ochre-soft:#FAF2E0;
+  --moss:#5F7052;
+  --flag:#9A4A28;
+
+  --w:74rem;
+  --col:41rem;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:1.0625rem;
+  line-height:1.62;
+  font-variant-numeric:oldstyle-nums;
+}
+
+h1,h2,h3,h4,.sans,nav,th,.fig,.chip,button{
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-variant-numeric:normal;
+}
+
+a{color:var(--trade);text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--trade);outline-offset:3px}
+
+/* ---------- site mode switcher (shared with the React app) ---------- */
+.mode-bar{
+  border-bottom:1px solid var(--seam);
+  background:var(--paper-2);
+}
+.mode-bar-in{
+  max-width:var(--w);margin:0 auto;padding:.4rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.mode-brand{
+  font-family:"Archivo",sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--mute);
+}
+.mode-toggle{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--seam);border-radius:6px;padding:3px;background:var(--paper);
+  font-family:"Archivo",sans-serif;font-size:.72rem;font-weight:600;
+}
+.mode-toggle a{
+  color:var(--slate);text-decoration:none;padding:.35rem .85rem;
+  border-radius:4px;text-align:center;border-bottom:0;
+}
+.mode-toggle a:hover{color:var(--ink)}
+.mode-toggle a[aria-current="page"]{
+  background:var(--ink);color:var(--paper);
+}
+
+/* ---------- masthead ---------- */
+.mast{
+  border-bottom:1px solid var(--seam);
+  background:var(--paper);
+  position:sticky;top:0;z-index:40;
+}
+.mast-in{
+  max-width:var(--w);margin:0 auto;padding:.85rem 1.5rem;
+  display:flex;align-items:baseline;gap:2rem;flex-wrap:wrap;
+}
+.mark{
+  font-family:"Archivo",sans-serif;font-weight:700;font-size:.95rem;
+  letter-spacing:-.01em;color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:.5rem;
+}
+.mark span{
+  width:14px;height:14px;background:var(--trade);
+  display:inline-block;
+  box-shadow:4px 0 0 var(--ochre), 8px 0 0 var(--moss);
+  margin-right:8px;
+}
+nav{margin-left:auto;display:flex;gap:1.4rem;font-size:.86rem;font-weight:500}
+nav a{color:var(--slate);text-decoration:none;padding-bottom:2px;border-bottom:2px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--trade)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--w);margin:0 auto;padding:0 1.5rem}
+.col{max-width:var(--col)}
+main{padding-bottom:6rem}
+
+/* ---------- hero: the sample rack ---------- */
+.hero{border-bottom:1px solid var(--seam);padding:4.5rem 0 3.25rem}
+.hero h1{
+  font-size:clamp(2.4rem,5.5vw,4rem);line-height:1.02;margin:0 0 1.25rem;
+  font-weight:700;letter-spacing:-.025em;max-width:16ch;
+}
+.hero p{font-size:1.2rem;line-height:1.55;color:var(--slate);max-width:52ch;margin:0}
+.rack{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:1px;background:var(--seam);border:1px solid var(--seam);
+  margin-top:3rem;
+}
+.rack div{background:var(--paper);padding:1.1rem 1rem 1.2rem}
+.rack .n{
+  font-family:"Archivo",sans-serif;font-weight:700;font-size:1.85rem;
+  letter-spacing:-.02em;display:block;line-height:1.1;
+}
+.rack .l{font-size:.82rem;color:var(--mute);line-height:1.35;display:block;margin-top:.35rem}
+.rack .swatch{height:5px;margin-bottom:.9rem}
+
+/* ---------- typography blocks ---------- */
+section{padding:3.25rem 0;border-bottom:1px solid var(--seam)}
+section:last-of-type{border-bottom:0}
+h2{
+  font-size:1.65rem;font-weight:700;letter-spacing:-.018em;
+  margin:0 0 .35rem;line-height:1.15;
+}
+.kicker{
+  font-size:.82rem;color:var(--mute);margin:0 0 1.75rem;
+  font-family:"Archivo",sans-serif;
+}
+h3{font-size:1.06rem;font-weight:600;margin:2.25rem 0 .5rem;letter-spacing:-.008em}
+p{margin:0 0 1.05rem}
+.lede{font-size:1.14rem;color:var(--slate)}
+
+blockquote{
+  margin:1.75rem 0;padding:1.1rem 0 1.1rem 1.5rem;
+  border-left:3px solid var(--trade);
+  font-size:1.16rem;line-height:1.5;
+}
+blockquote p:last-child{margin:0}
+
+ul{margin:0 0 1.05rem;padding-left:1.15rem}
+li{margin-bottom:.5rem}
+li::marker{color:var(--seam-2)}
+
+.note{
+  background:var(--paper-2);border-left:3px solid var(--seam-2);
+  padding:1rem 1.25rem;font-size:.95rem;color:var(--slate);margin:1.75rem 0;
+}
+.note strong{color:var(--ink)}
+
+/* ---------- citations: the swatch chip ---------- */
+cite.c{
+  font-style:normal;
+  border-bottom:1px dotted var(--ochre);
+  cursor:pointer;position:relative;
+  background:linear-gradient(to bottom,transparent 82%,var(--ochre-soft) 82%);
+}
+cite.c:hover{background:var(--ochre-soft)}
+cite.c sup{
+  font-family:"Archivo",sans-serif;font-size:.62rem;font-weight:700;
+  color:var(--ochre);margin-left:2px;top:-.5em;position:relative;
+}
+#tip{
+  position:absolute;z-index:80;max-width:25rem;
+  background:var(--ink);color:#F5F3EE;padding:.9rem 1rem;
+  font-size:.88rem;line-height:1.5;
+  box-shadow:0 8px 28px rgba(0,0,0,.22);
+  opacity:0;pointer-events:none;transition:opacity .12s;
+  font-family:"Newsreader",Georgia,serif;
+}
+#tip.on{opacity:1}
+#tip .who{
+  display:block;font-family:"Archivo",sans-serif;font-size:.72rem;
+  color:var(--ochre);margin-bottom:.4rem;font-weight:600;
+}
+#tip .go{
+  display:block;font-family:"Archivo",sans-serif;font-size:.7rem;
+  color:#9AA3AB;margin-top:.55rem;
+}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:1.75rem 0;font-size:.93rem}
+th{
+  text-align:left;font-size:.78rem;font-weight:600;color:var(--slate);
+  padding:.5rem .75rem;border-bottom:1.5px solid var(--ink);
+}
+td{padding:.6rem .75rem;border-bottom:1px solid var(--seam);vertical-align:top}
+tbody tr:hover{background:var(--paper-2)}
+tr.hi td{background:var(--trade-soft)}
+tr.hi:hover td{background:#DDE9F5}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- figures ---------- */
+figure{margin:2.5rem 0;padding:0}
+figcaption{font-size:.83rem;color:var(--mute);margin-top:.85rem;font-family:"Archivo",sans-serif}
+.fig{font-size:.8rem}
+
+/* bar chart */
+.bars{display:grid;gap:1px;background:var(--seam);border:1px solid var(--seam)}
+.bar{
+  background:var(--paper);display:grid;
+  grid-template-columns:11rem 1fr 6rem;align-items:center;
+  gap:1rem;padding:.7rem 1rem;cursor:default;
+}
+.bar:hover{background:var(--paper-2)}
+.bar .nm{font-family:"Archivo",sans-serif;font-size:.88rem;font-weight:500}
+.bar .track{height:22px;background:var(--paper-2);position:relative}
+.bar .fill{height:100%;background:var(--slate);transition:background .15s}
+.bar:hover .fill{background:var(--ink)}
+.bar.key .fill{background:var(--trade)}
+.bar .val{
+  font-family:"Archivo",sans-serif;font-size:.85rem;text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.bar .meta{
+  grid-column:1/-1;font-size:.82rem;color:var(--slate);
+  max-height:0;overflow:hidden;transition:max-height .18s;
+}
+.bar:hover .meta{max-height:3rem;padding-top:.5rem}
+
+/* value-chain grid */
+.vc{overflow-x:auto;margin:1.5rem 0}
+.vc table{font-size:.8rem;margin:0;min-width:46rem}
+.vc th{padding:.5rem .3rem;text-align:center;font-size:.72rem;line-height:1.2}
+.vc th:first-child{text-align:left;width:11rem}
+.vc td{padding:0;border:0}
+.vc td:first-child{
+  padding:.35rem .6rem .35rem 0;font-family:"Archivo",sans-serif;
+  font-size:.82rem;border:0;white-space:nowrap;
+}
+.cell{height:26px;margin:1px;background:#EFEDE7}
+.cell.on{background:var(--slate)}
+.vc tr:hover .cell.on{background:var(--trade)}
+.vc tr.rundoo .cell.on{background:var(--ochre)}
+.vc tr:hover td:first-child{color:var(--trade)}
+
+/* consolidation map */
+.roll{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--seam);border:1px solid var(--seam)}
+.roll > div{background:var(--paper);padding:1.2rem}
+.roll h4{font-family:"Archivo",sans-serif;font-size:1.05rem;margin:0 0 .2rem;font-weight:700}
+.roll .sub{font-size:.8rem;color:var(--mute);margin-bottom:.9rem;font-family:"Archivo",sans-serif}
+.roll ul{list-style:none;padding:0;margin:0;font-size:.88rem}
+.roll li{padding:.4rem 0;border-bottom:1px solid var(--seam);margin:0}
+.roll li:last-child{border-bottom:0}
+.roll li span{display:block;font-size:.76rem;color:var(--mute)}
+.roll.a4 > div:nth-child(1){border-top:3px solid var(--trade)}
+.roll.a4 > div:nth-child(2){border-top:3px solid var(--moss)}
+.roll.a4 > div:nth-child(3){border-top:3px solid var(--seam-2)}
+
+/* ---------- playbook ---------- */
+.step{
+  display:grid;grid-template-columns:3.2rem 1fr;gap:1.25rem;
+  padding:1.6rem 0;border-bottom:1px solid var(--seam);
+}
+.step:last-child{border-bottom:0}
+.step .k{
+  font-family:"Archivo",sans-serif;font-weight:700;font-size:1.5rem;
+  color:var(--seam-2);line-height:1;padding-top:.15rem;
+}
+.step h3{margin:0 0 .45rem;font-size:1.12rem}
+.step p:last-child{margin-bottom:0}
+
+.say{
+  background:var(--trade-soft);border-left:3px solid var(--trade);
+  padding:1rem 1.25rem;margin:1rem 0;font-size:1.02rem;line-height:1.55;
+}
+.say em{font-style:normal;color:var(--slate);font-size:.84rem;font-family:"Archivo",sans-serif;display:block;margin-bottom:.4rem}
+
+.obj{border:1px solid var(--seam);margin:1rem 0}
+.obj summary{
+  padding:.85rem 1.1rem;cursor:pointer;font-family:"Archivo",sans-serif;
+  font-size:.95rem;font-weight:500;list-style:none;display:flex;gap:.75rem;
+}
+.obj summary::-webkit-details-marker{display:none}
+.obj summary::before{content:"+";color:var(--trade);font-weight:700}
+.obj[open] summary::before{content:"–"}
+.obj summary:hover{background:var(--paper-2)}
+.obj .body{padding:0 1.1rem 1.1rem 2.85rem;font-size:.97rem;color:var(--slate)}
+.obj .body p:last-child{margin:0}
+
+/* corridor cards */
+.terr{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1px;background:var(--seam);border:1px solid var(--seam);margin:1.75rem 0}
+.terr > div{background:var(--paper);padding:1.15rem}
+.terr h4{font-family:"Archivo",sans-serif;font-size:1rem;margin:0 0 .15rem;font-weight:600}
+.terr .lang{font-size:.78rem;color:var(--ochre);font-family:"Archivo",sans-serif;margin-bottom:.6rem}
+.terr p{font-size:.89rem;color:var(--slate);margin:0}
+
+/* ---------- transcripts ---------- */
+.tr-nav{
+  position:sticky;top:6.15rem;background:var(--paper);
+  border-bottom:1px solid var(--seam);padding:.7rem 0;z-index:30;
+  font-size:.83rem;font-family:"Archivo",sans-serif;
+}
+.tr-nav a{margin-right:1.25rem;color:var(--slate);text-decoration:none;white-space:nowrap}
+.tr-nav a:hover{color:var(--trade)}
+.tr-nav .in{max-width:var(--w);margin:0 auto;padding:0 1.5rem;overflow-x:auto;white-space:nowrap}
+
+.src{padding:3rem 0;border-bottom:1px solid var(--seam)}
+.src h2{margin-bottom:.25rem}
+.src .meta{font-size:.85rem;color:var(--mute);font-family:"Archivo",sans-serif;margin-bottom:1.5rem}
+.q{
+  padding:1rem 0 1rem 1.25rem;border-left:2px solid var(--seam-2);
+  margin:1rem 0;scroll-margin-top:10.5rem;
+}
+.q:target{border-left-color:var(--ochre);background:var(--ochre-soft)}
+.q .lbl{
+  font-family:"Archivo",sans-serif;font-size:.74rem;color:var(--mute);
+  display:block;margin-bottom:.4rem;
+}
+.q p{margin:0 0 .6rem}
+.q p:last-child{margin:0}
+
+footer{padding:3rem 0;font-size:.85rem;color:var(--mute);font-family:"Archivo",sans-serif}
+
+@media (max-width:820px){
+  .bar{grid-template-columns:8rem 1fr 4.5rem;gap:.6rem;padding:.6rem .7rem}
+  .step{grid-template-columns:2.2rem 1fr;gap:.85rem}
+  .hero{padding:3rem 0 2.5rem}
+  nav{gap:1rem;font-size:.8rem;width:100%;margin-left:0;margin-top:.5rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
