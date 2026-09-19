@@ -286,11 +286,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#18181B]">
+    <div className="flex h-screen flex-col bg-[#FAFAFA] text-[#18181B]">
       <ModeSwitcher current="app" />
-      <div className="flex min-h-screen">
+      <div className="relative flex min-h-0 flex-1">
       <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-auto">
         <TopBar title={activeNav} view={view} setView={setView} />
         <main className="px-8 pb-8">
           {activeNav === 'Jobs' && view === 'Board' && (
@@ -371,7 +371,7 @@ function ModeSwitcher({ current }) {
   const researchHref = `${import.meta.env.BASE_URL}research/index.html`
 
   return (
-    <div className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white">
+    <div className="sticky top-0 z-20 shrink-0 border-b border-[#E5E7EB] bg-white">
       <div className="flex items-center justify-between px-4 py-2">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#71717A]">
           Rundoo
@@ -653,7 +653,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
   const [localInstructions, setLocalInstructions] = useState(job.instructions)
   const setLineItems = (lineItems) => updateJob(job.id, { lineItems, amount: saleTotal(lineItems), totals: totalsFor(lineItems, job.totals.deposit, job.totals.delivery) })
   return (
-    <div className="fixed inset-0 z-40 flex justify-end bg-black/20">
+    <div className="absolute inset-0 z-40 flex justify-end bg-black/20">
       <aside className={`${expanded ? 'w-full' : 'w-[560px]'} flex h-full flex-col border-l border-[#E5E7EB] bg-white ${tourRing(guideTarget, 'drawer')}`}>
         <div className="flex items-start justify-between border-b border-[#E5E7EB] p-4">
           <div><p className="font-semibold text-[#1E40AF]">{job.id}</p><h2 className="text-xl font-bold">{job.customer}</h2><StatusPill label={`${job.column} / ${job.subState}`} /></div>
@@ -881,7 +881,7 @@ function WorkOrderTable({ job, hidePrices = false }) {
 }
 
 function Modal({ children, wide = false, expanded = false }) {
-  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-8"><section className={`${expanded ? 'h-full w-full' : wide ? 'w-[720px]' : 'w-[560px]'} max-h-full overflow-auto rounded-md border border-[#E5E7EB] bg-white p-5 shadow-lg`}>{children}</section></div>
+  return <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 p-8"><section className={`${expanded ? 'h-full w-full' : wide ? 'w-[720px]' : 'w-[560px]'} max-h-full overflow-auto rounded-md border border-[#E5E7EB] bg-white p-5 shadow-lg`}>{children}</section></div>
 }
 
 function ModalHeader({ title, expanded, setExpanded }) {
