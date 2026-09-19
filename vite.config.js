@@ -32,5 +32,6 @@ function researchDirectoryIndex() {
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/rundoo/',
   plugins: [react(), tailwindcss(), researchDirectoryIndex()],
 })
