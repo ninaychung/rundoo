@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Feature — PM Takehome Assignment</title>
+<meta name="description" content="The flooring product feature implied by the field research: a full job lifecycle with installer invoice reconciliation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="mast">
+  <div class="mode-bar" role="navigation" aria-label="Site mode">
+    <div class="mode-bar-in">
+      <span class="mode-brand">Rundoo</span>
+      <div class="mode-toggle">
+        <a href="../">App</a>
+        <a href="index.html" aria-current="page">Research</a>
+      </div>
+    </div>
+  </div>
+  <div class="mast-in">
+    <a class="mark" href="index.html"><i></i>PM Takehome Assignment</a>
+    <nav>
+      <a href="index.html">Market Insights</a>
+      <a href="product.html" aria-current="page">Product Feature</a>
+      <a href="gtm.html">GTM strategy</a>
+      <a href="transcripts.html">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="pagehead">
+    <h1>Product Feature</h1>
+    <p>The prototype covers the full job lifecycle for a flooring store — measure, customer selection, stock and price check, order, material received, installation, and settling up with the installer.</p>
+  </div>
+
+  <section>
+    <div class="col">
+      <h2>What was built, and why this flow</h2>
+      <p class="kicker">A project layer for stores that still run on paper</p>
+
+      <p>The prototype covers the <strong>full job lifecycle for a flooring store</strong> — measure, customer selection, stock and price check, order, material received, installation, and settling up with the installer — with the weekly subcontractor invoice as the closing step.</p>
+
+      <p><strong>Why this flow.</strong> Flooring dispatches installation to 1099 subcontractors who also work for competing dealers. The cost arrives <em>after</em> the work, <em>from outside</em>, <em>batched across a week of jobs</em>, and priced per task rather than per hour. Nothing in a conventional retail system models that. Rundoo already ships delivery scheduling with truck and driver assignment across multiple stops — but a delivery driver is an employee whose cost runs through payroll and never returns to the system. A contractor is a vendor who bills you back. That difference is the gap the feature fills.</p>
+
+      <p><strong>Why not something else.</strong> Checked against Rundoo's public roadmap before choosing. Inventory and purchasing is already heavily in flight — PO lifecycle editing, received-shipment editing, PO context, replenishment, predictive ordering, vendor cost integration, EDI receiving. Delivery scheduling has shipped, with a mobile flow targeted. <strong>Contractor work orders and subcontractor invoice reconciliation appear nowhere on the roadmap, in any status.</strong></p>
+
+      <p><strong>Grounded in one store's actual paper.</strong> The work order mirrors Carpet Place's physical form, down to the field order and the yes/no checklist — steps, stringers, metal, padding, cartaway. Work orders go out by email, which is what the store does today, so no separate installer app is required. The installer's copy hides unit price and amount, exactly as the paper copy does. Rates are per foot by task, matching how installers actually bill.</p>
+
+      <div class="note"><strong>Scoping decision.</strong> Employees are paid through payroll and never invoice the store, so this flow applies only to subcontracted labor. Carpet Place uses subcontractors exclusively; West Carpets employs its installers, and the flow simply wouldn't apply there.</div>
+    </div>
+  </section>
+
+  <footer class="col">
+    Nina Chung · September 2026 · <a href="index.html">Market Insights</a> · <a href="gtm.html">GTM strategy</a> · <a href="transcripts.html">Sources</a>
+  </footer>
+
+</div>
+</main>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
