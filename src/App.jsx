@@ -278,7 +278,9 @@ function App() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#FAFAFA] text-[#18181B]">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#18181B]">
+      <ModeSwitcher current="app" />
+      <div className="flex min-h-screen">
       <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} />
       <div className="min-w-0 flex-1">
         <TopBar title={activeNav} view={view} setView={setView} />
@@ -349,6 +351,44 @@ function App() {
           Show guide
         </button>
       )}
+      </div>
+    </div>
+  )
+}
+
+function ModeSwitcher({ current }) {
+  const appHref = import.meta.env.BASE_URL || '/'
+  // Point at the HTML file, not the directory. Vite's SPA fallback
+  // would otherwise serve the React app again at /research/.
+  const researchHref = `${import.meta.env.BASE_URL}research/index.html`
+
+  return (
+    <div className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white">
+      <div className="flex items-center justify-between px-4 py-2">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#71717A]">
+          Rundoo
+        </p>
+        <nav aria-label="Site mode" className="grid grid-cols-2 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-0.5 text-xs font-semibold">
+          <a
+            href={appHref}
+            aria-current={current === 'app' ? 'page' : undefined}
+            className={`rounded px-3 py-1.5 text-center ${
+              current === 'app' ? 'bg-[#18181B] text-white' : 'text-[#71717A] hover:text-[#18181B]'
+            }`}
+          >
+            App
+          </a>
+          <a
+            href={researchHref}
+            aria-current={current === 'research' ? 'page' : undefined}
+            className={`rounded px-3 py-1.5 text-center ${
+              current === 'research' ? 'bg-[#18181B] text-white' : 'text-[#71717A] hover:text-[#18181B]'
+            }`}
+          >
+            Research
+          </a>
+        </nav>
+      </div>
     </div>
   )
 }
