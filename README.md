@@ -13,7 +13,7 @@ Because `vite.config.js` sets `base: '/rundoo/'` (required for GitHub Pages), lo
 | **App** | [http://localhost:5173/rundoo/](http://localhost:5173/rundoo/) | https://ninaychung.github.io/rundoo/ |
 | **Research** | [http://localhost:5173/rundoo/research/](http://localhost:5173/rundoo/research/) | https://ninaychung.github.io/rundoo/research/ |
 
-Research files live in `public/research/` and are copied into the Vite production build as static HTML, CSS, and JS.
+Research files live in `public/research/` (`index.html` Market Insights, `gtm.html` GTM Plan, `transcripts.html` Sources) and are copied into the Vite production build as static HTML, CSS, and JS.
 
 ## Scripts
 
