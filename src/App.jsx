@@ -4,10 +4,25 @@ const columns = {
   Estimation: ['Not scheduled', 'Scheduled', 'Complete'],
   Order: ['Not ordered', 'Ordered', 'Received'],
   Installation: ['Not scheduled', 'Scheduled', 'In progress', 'Complete'],
-  Invoicing: ['Awaiting invoice', 'Invoice received', 'Paid'],
 }
 
-const workAreas = ['LR', 'DR', 'MBR', 'BR1', 'BR2', 'BR3', 'FR', 'Sunroom', 'Attic', 'Closet', 'Stairs', 'Hall', 'Kitchen', 'Bath']
+const flowStages = ['Estimation', 'Order', 'Installation', 'Invoicing']
+const workAreas = [
+  ['LR', 'Living Room'],
+  ['DR', 'Dining Room'],
+  ['MBR', 'Main Bedroom'],
+  ['BR1', 'Bedroom 1'],
+  ['BR2', 'Bedroom 2'],
+  ['BR3', 'Bedroom 3'],
+  ['FR', 'Family Room'],
+  ['Sunroom', 'Sunroom'],
+  ['Attic', 'Attic'],
+  ['Closet', 'Closet'],
+  ['Stairs', 'Stairs'],
+  ['Hall', 'Hall'],
+  ['Kitchen', 'Kitchen'],
+  ['Bath', 'Bath'],
+]
 const checklistLabels = ['Steps', 'Stringers', 'Metal', 'Padding', 'Cartaway', 'T.K./G.D./L.L.', 'R.P./S.P./C.A.']
 const money = (value) => value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 
@@ -52,7 +67,9 @@ const seedJobs = [
   }),
   job({
     id: 'JOB-5011',
-    customer: 'Nakamura, S.',
+    customer: 'Andrew Beckman',
+    firstName: 'Andrew',
+    lastName: 'Beckman',
     city: 'Edison NJ',
     address: '44 Wooding Ave, Edison NJ',
     column: 'Estimation',
@@ -93,9 +110,9 @@ const seedJobs = [
   }),
   job({
     id: 'JOB-5005',
-    customer: 'Hargadon, Lucy',
-    firstName: 'Lucy',
-    lastName: 'Hargadon',
+    customer: 'Nick Hershey',
+    firstName: 'Nick',
+    lastName: 'Hershey',
     city: 'Edison NJ',
     address: '34 Runyon Ave, Edison NJ',
     phone: '(732) 988-2347',
@@ -327,7 +344,7 @@ function App() {
       ) : (
         <button
           onClick={() => setGuideOpen(true)}
-          className="fixed bottom-5 right-5 z-50 rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white"
+          className="fixed bottom-5 left-[250px] z-50 rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white"
         >
           Show guide
         </button>
@@ -454,7 +471,7 @@ function JobCard({ job, openJob, setDraggedId, highlighted = false, compact = fa
       </div>
       <p className="mt-2 font-semibold">{job.customer}</p>
       <p className="mt-1 text-xs text-[#71717A]">{job.address}</p>
-      <p className="mt-2 text-xs text-[#71717A]">{job.material} · {job.areas.join(' + ')} · {job.size}</p>
+      <p className="mt-2 text-xs text-[#71717A]">{job.material} · {formatAreas(job.areas)} · {job.size}</p>
       <div className="mt-3 flex items-center justify-between text-xs text-[#71717A]">
         <span>♙ {installer ? installer.name : 'Unassigned'}</span>
         <span>◷ {nextDate(job)}</span>
@@ -599,7 +616,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
           <DrawerSection id="estimation" title="Estimation">
             <FieldSelect label="Who measured" value={job.measuredBy} options={['Shariq', 'Michele', 'Carlos']} onChange={(value) => updateJob(job.id, { measuredBy: value })} />
             <FieldDate label="Date of measure" value={job.measureDate} onChange={(value) => updateJob(job.id, { measureDate: value })} />
-            <Toggle label="Estimate complete" checked={job.column !== 'Estimation'} onChange={() => updateJob(job.id, { column: 'Order', subState: 'Not ordered' })} />
+            <Toggle label="Estimation complete" checked={job.column !== 'Estimation'} onChange={() => updateJob(job.id, { column: 'Order', subState: 'Not ordered' })} />
           </DrawerSection>
           <DrawerSection id="order" title="Order">
             <button onClick={openStock} className={`rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white ${tourRing(guideTarget, 'stock')}`}>Check stock & price</button>
@@ -617,16 +634,33 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
             <div className="mt-3 flex flex-wrap gap-2">{columns.Installation.map((state) => <button key={state} onClick={() => updateJob(job.id, { column: 'Installation', subState: state })} className={`rounded-full border px-3 py-1 text-sm ${job.subState === state && job.column === 'Installation' ? 'border-blue-200 bg-blue-50 text-[#1E40AF]' : 'border-[#E5E7EB] text-[#71717A]'}`}>{state}</button>)}</div>
           </DrawerSection>
           <EditableLines lines={job.lineItems} setLines={setLineItems} />
-          <EditableChecklist checklist={job.checklist} setChecklist={(checklist) => updateJob(job.id, { checklist })} />
-          <DrawerSection title="Add-ons">
-            <button onClick={() => updateJob(job.id, { addOns: [...job.addOns, { material: 'Leveler', amount: 0, note: 'Added on site' }] })} className="rounded-md border border-[#E5E7EB] px-3 py-2 text-sm font-semibold">+ Add line item</button>
-            <div className="mt-3 space-y-2">{job.addOns.map((addOn, index) => <p key={`${addOn.material}-${index}`} className="rounded-md bg-[#FEF3C7] px-3 py-2 text-sm font-semibold text-[#B45309]">{addOn.material} <span className="ml-2 rounded bg-white/70 px-2 py-1 text-xs">Added on site</span></p>)}</div>
-          </DrawerSection>
+          <div className="grid grid-cols-2 gap-4">
+            <DrawerSection title="Work order details">
+              <ChecklistControls checklist={job.checklist} setChecklist={(checklist) => updateJob(job.id, { checklist })} />
+            </DrawerSection>
+            <DrawerSection title="Additional directions">
+              <textarea
+                value={localInstructions}
+                onChange={(event) => { setLocalInstructions(event.target.value); updateJob(job.id, { instructions: event.target.value }) }}
+                className="h-48 w-full resize-none rounded-md border border-[#E5E7EB] p-3"
+                placeholder="Key is in the mailbox"
+              />
+            </DrawerSection>
+          </div>
           <DrawerSection title="Payment">
             <div className="grid grid-cols-2 gap-3"><FieldText label="Initial deposit" value={job.totals.deposit} onChange={(value) => updateJob(job.id, { totals: { ...job.totals, deposit: Number(value), balance: job.totals.due - Number(value) } })} /><FieldText label="Balance" value={job.totals.balance} onChange={(value) => updateJob(job.id, { totals: { ...job.totals, balance: Number(value) } })} /></div>
-            <Toggle label="Paid in full" checked={job.totals.balance === 0} onChange={() => updateJob(job.id, { totals: { ...job.totals, deposit: job.totals.due, balance: 0 } })} />
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button className="rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white">Ring up order</button>
+              <label className="flex items-center gap-2 rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-semibold">
+                <input type="checkbox" checked={job.paymentMethod === 'check'} onChange={() => updateJob(job.id, { paymentMethod: job.paymentMethod === 'check' ? '' : 'check' })} />
+                Customer paid by check
+              </label>
+              <label className="flex items-center gap-2 rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-semibold">
+                <input type="checkbox" checked={job.paymentMethod === 'cash'} onChange={() => updateJob(job.id, { paymentMethod: job.paymentMethod === 'cash' ? '' : 'cash' })} />
+                Customer paid by cash
+              </label>
+            </div>
           </DrawerSection>
-          <textarea value={localInstructions} onChange={(event) => { setLocalInstructions(event.target.value); updateJob(job.id, { instructions: event.target.value }) }} className="h-24 w-full resize-none rounded-md border border-[#E5E7EB] p-3" />
         </div>
         <div className="flex justify-between border-t border-[#E5E7EB] bg-white p-4"><button className="text-sm font-semibold text-[#71717A]">Delete</button><button onClick={close} className="rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white">Save</button></div>
       </aside>
@@ -644,7 +678,7 @@ function EditableLines({ lines, setLines }) {
         <tbody>{lines.map((lineItem, index) => <tr key={index} className="border-b border-[#E5E7EB]">
           <td className="px-2 py-2"><input value={lineItem.material} onChange={(event) => update(index, { material: event.target.value })} className="w-full rounded border border-[#E5E7EB] px-2 py-1" /></td>
           <td className="px-2 py-2"><input value={lineItem.color} onChange={(event) => update(index, { color: event.target.value })} className="w-full rounded border border-[#E5E7EB] px-2 py-1" /></td>
-          <td className="px-2 py-2"><select multiple value={lineItem.areas} onChange={(event) => update(index, { areas: [...event.target.selectedOptions].map((option) => option.value) })} className="h-16 w-full rounded border border-[#E5E7EB] px-2 py-1">{workAreas.map((area) => <option key={area}>{area}</option>)}</select></td>
+          <td className="px-2 py-2"><select multiple value={lineItem.areas} onChange={(event) => update(index, { areas: [...event.target.selectedOptions].map((option) => option.value) })} className="h-16 w-full rounded border border-[#E5E7EB] px-2 py-1">{workAreas.map(([code, name]) => <option key={code} value={code}>{name === code ? name : `${name} (${code})`}</option>)}</select></td>
           <td className="px-2 py-2"><input value={lineItem.size} onChange={(event) => update(index, { size: event.target.value })} className="w-24 rounded border border-[#E5E7EB] px-2 py-1" /></td>
           <td className="px-2 py-2"><input value={lineItem.ydsFt} onChange={(event) => update(index, { ydsFt: event.target.value })} className="w-20 rounded border border-[#E5E7EB] px-2 py-1" /></td>
           <td className="px-2 py-2"><input value={lineItem.unitPrice} onChange={(event) => update(index, { unitPrice: event.target.value })} className="w-20 rounded border border-[#E5E7EB] px-2 py-1" /></td>
@@ -656,7 +690,27 @@ function EditableLines({ lines, setLines }) {
 }
 
 function EditableChecklist({ checklist, setChecklist }) {
-  return <div className="mt-5"><p className="mb-2 text-sm font-semibold">Checklist</p><div className="flex flex-wrap gap-2">{checklistLabels.map((label) => <button key={label} onClick={() => setChecklist({ ...checklist, [label]: !checklist[label] })} className={`rounded-full border px-3 py-1 text-sm font-medium ${checklist[label] ? 'border-blue-200 bg-blue-50 text-[#1E40AF]' : 'border-[#E5E7EB] bg-white text-[#71717A]'}`}>{label} {checklist[label] ? 'Yes' : 'No'}</button>)}</div></div>
+  return (
+    <div className="mt-5">
+      <p className="mb-2 text-sm font-semibold">Work order details</p>
+      <ChecklistControls checklist={checklist} setChecklist={setChecklist} />
+    </div>
+  )
+}
+
+function ChecklistControls({ checklist, setChecklist }) {
+  return (
+    <div className="grid grid-cols-1 gap-2">
+      {checklistLabels.map((label) => (
+        <MiniToggle
+          key={label}
+          label={label}
+          checked={checklist[label]}
+          onChange={() => setChecklist({ ...checklist, [label]: !checklist[label] })}
+        />
+      ))}
+    </div>
+  )
 }
 
 function StockModal({ close }) {
@@ -719,7 +773,7 @@ function PaperHeader({ job }) {
 }
 
 function WorkOrderTable({ job, hidePrices = false }) {
-  return <table className="w-full text-left text-sm"><thead className="border-y border-[#E5E7EB] bg-[#FAFAFA] text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft'].map((head) => <th key={head} className="px-3 py-2">{head}</th>)}{!hidePrices && <th className="px-3 py-2">Unit price</th>}{!hidePrices && <th className="px-3 py-2 text-right">Amount</th>}</tr></thead><tbody>{job.lineItems.map((item) => <tr key={item.material} className="border-b border-[#E5E7EB]"><td className="px-3 py-3 font-medium">{item.material}</td><td className="px-3 py-3">{item.color}</td><td className="px-3 py-3"><span title="LR living room · DR dining room · MBR main bedroom · BR1 bedroom 1 · BR2 bedroom 2 · FR family room">{item.areas.join(', ')}</span></td><td className="px-3 py-3">{item.size}</td><td className="px-3 py-3">{item.ydsFt}</td>{!hidePrices && <td className="px-3 py-3">{item.unitPrice ? money(Number(item.unitPrice)) : ''}</td>}{!hidePrices && <td className="px-3 py-3 text-right font-semibold">{money(Number(item.amount) || 0)}</td>}</tr>)}</tbody></table>
+  return <table className="w-full text-left text-sm"><thead className="border-y border-[#E5E7EB] bg-[#FAFAFA] text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft'].map((head) => <th key={head} className="px-3 py-2">{head}</th>)}{!hidePrices && <th className="px-3 py-2">Unit price</th>}{!hidePrices && <th className="px-3 py-2 text-right">Amount</th>}</tr></thead><tbody>{job.lineItems.map((item) => <tr key={item.material} className="border-b border-[#E5E7EB]"><td className="px-3 py-3 font-medium">{item.material}</td><td className="px-3 py-3">{item.color}</td><td className="px-3 py-3"><span title="LR living room · DR dining room · MBR main bedroom · BR1 bedroom 1 · BR2 bedroom 2 · FR family room">{formatAreas(item.areas)}</span></td><td className="px-3 py-3">{item.size}</td><td className="px-3 py-3">{item.ydsFt}</td>{!hidePrices && <td className="px-3 py-3">{item.unitPrice ? money(Number(item.unitPrice)) : ''}</td>}{!hidePrices && <td className="px-3 py-3 text-right font-semibold">{money(Number(item.amount) || 0)}</td>}</tr>)}</tbody></table>
 }
 
 function Modal({ children, wide = false, expanded = false }) {
@@ -752,7 +806,43 @@ function FieldSelect({ label, value, options, labels = {}, onChange }) {
 }
 
 function Toggle({ label, checked, onChange }) {
-  return <button onClick={onChange} className={`mt-3 rounded-full border px-3 py-1 text-sm font-semibold ${checked ? 'border-blue-200 bg-blue-50 text-[#1E40AF]' : 'border-[#E5E7EB] text-[#71717A]'}`}>{label}: {checked ? 'Yes' : 'No'}</button>
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={onChange}
+      className="mt-3 flex w-full items-center justify-between rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-semibold"
+    >
+      <span>{label}</span>
+      <span className="flex items-center gap-2">
+        <span className={checked ? 'text-[#1E40AF]' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
+        <span className={`flex h-6 w-11 items-center rounded-full p-0.5 transition ${checked ? 'bg-[#1D4ED8]' : 'bg-[#D4D4D8]'}`}>
+          <span className={`h-5 w-5 rounded-full bg-white transition ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
+        </span>
+      </span>
+    </button>
+  )
+}
+
+function MiniToggle({ label, checked, onChange }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={onChange}
+      className="flex items-center justify-between rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-left text-sm font-medium"
+    >
+      <span>{label}</span>
+      <span className="flex items-center gap-2">
+        <span className={checked ? 'text-[#1E40AF]' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
+        <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${checked ? 'bg-[#1D4ED8]' : 'bg-[#D4D4D8]'}`}>
+          <span className={`h-4 w-4 rounded-full bg-white transition ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
+        </span>
+      </span>
+    </button>
+  )
 }
 
 function DrawerSection({ id, title, children }) {
@@ -760,7 +850,48 @@ function DrawerSection({ id, title, children }) {
 }
 
 function CompactStageTracker({ current }) {
-  return <div className="grid grid-cols-4 gap-2">{Object.keys(columns).map((stage) => <button key={stage} onClick={() => document.getElementById(stage.toLowerCase())?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-md border px-2 py-2 text-sm font-semibold ${stageIndex(stage) < stageIndex(current) ? 'border-blue-200 bg-blue-50 text-[#1E40AF]' : stage === current ? 'border-[#1D4ED8] bg-[#EEF2FE] text-[#1D4ED8]' : 'border-[#E5E7EB] text-[#71717A]'}`}>{stageIndex(stage) < stageIndex(current) ? '✓ ' : ''}{stage}</button>)}</div>
+  const stages = flowStages
+  const currentIndex = stageIndex(current)
+  const progress = `${(currentIndex / (stages.length - 1)) * 100}%`
+  return (
+    <div className="rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4">
+      <div className="relative">
+        <div className="absolute left-0 right-0 top-4 h-2 rounded-full bg-[#E5E7EB]" />
+        <div
+          className="absolute left-0 top-4 h-2 rounded-full bg-gradient-to-r from-[#1D4ED8] to-[#93C5FD]"
+          style={{ width: progress }}
+        />
+        <div className="relative grid grid-cols-4 gap-2">
+          {stages.map((stage, index) => {
+            const complete = index < currentIndex
+            const active = index === currentIndex
+            return (
+              <button
+                key={stage}
+                onClick={() => document.getElementById(stage.toLowerCase())?.scrollIntoView({ behavior: 'smooth' })}
+                className="flex flex-col items-center gap-2 text-center"
+              >
+                <span
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold ${
+                    complete
+                      ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white'
+                      : active
+                        ? 'border-[#1D4ED8] bg-white text-[#1D4ED8]'
+                        : 'border-[#D4D4D8] bg-white text-[#71717A]'
+                  }`}
+                >
+                  {complete ? '✓' : index + 1}
+                </span>
+                <span className={`text-xs font-semibold ${active ? 'text-[#1D4ED8]' : complete ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
+                  {stage}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function Totals({ totals }) {
@@ -779,7 +910,7 @@ function DemoGuide({ step, steps, next, previous, close }) {
   const current = steps[step]
   const isLast = step === steps.length - 1
   return (
-    <section className="fixed bottom-5 right-5 z-[60] w-[360px] rounded-md border border-[#E5E7EB] bg-white p-4 shadow-lg">
+    <section className="fixed bottom-5 left-[250px] z-[60] w-[360px] rounded-md border border-[#E5E7EB] bg-white p-4 shadow-lg">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#71717A]">
@@ -850,6 +981,7 @@ function job(overrides) {
     addOns: [],
     totals: totalsFor([firstLine], 0, 0),
     completedDate: '',
+    paymentMethod: '',
     ...overrides,
   }
 }
@@ -902,7 +1034,16 @@ function displayDate(value) {
 }
 
 function stageIndex(stage) {
-  return Object.keys(columns).indexOf(stage)
+  return flowStages.indexOf(stage)
+}
+
+function formatAreas(areas = []) {
+  return areas.map((area) => {
+    const match = workAreas.find(([code]) => code === area)
+    if (!match) return area
+    const [code, name] = match
+    return name === code ? name : `${name} (${code})`
+  }).join(' + ')
 }
 
 function calendarEvents(jobs) {
