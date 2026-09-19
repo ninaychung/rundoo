@@ -6,7 +6,7 @@ const columns = {
   Installation: ['Not scheduled', 'Scheduled', 'In progress', 'Complete'],
 }
 
-const flowStages = ['Estimation', 'Order', 'Installation', 'Invoicing']
+const flowStages = ['Estimation', 'Order', 'Installation']
 const workAreas = [
   ['LR', 'Living Room'],
   ['DR', 'Dining Room'],
@@ -29,7 +29,6 @@ const money = (value) => value.toLocaleString('en-US', { style: 'currency', curr
 const installers = [
   { id: 'tony', name: 'Tony Vasquez', type: 'Subcontractor', trade: 'carpet', email: 'tony.vasquez@example.com' },
   { id: 'ray', name: 'Ray Morales', type: 'Subcontractor', trade: 'carpet', email: 'ray.morales@example.com' },
-  { id: 'dave', name: 'Dave Kalinowski', type: 'Employee', trade: 'sand & finish', email: 'dave.kalinowski@example.com' },
 ]
 
 const rateCards = {
@@ -49,7 +48,6 @@ const rateCards = {
     ['Wall base / cove base', 'per ft', 1.85],
     ['Leveler', 'per ft', 2.4],
   ],
-  dave: [['Sand & finish', 'per hour', 52]],
 }
 
 const seedJobs = [
@@ -67,7 +65,7 @@ const seedJobs = [
   }),
   job({
     id: 'JOB-5011',
-    customer: 'Andrew Beckman',
+    customer: 'Beckman, A.',
     firstName: 'Andrew',
     lastName: 'Beckman',
     city: 'Edison NJ',
@@ -87,6 +85,8 @@ const seedJobs = [
     address: '21 Grove Ave, Edison NJ',
     column: 'Order',
     subState: 'Ordered',
+    measureDate: '2026-09-15',
+    orderedDate: '2026-09-16',
     eta: '2026-09-25',
     material: 'Mannington LVP',
     areas: ['LR', 'DR'],
@@ -101,6 +101,7 @@ const seedJobs = [
     address: '415 Plainfield Rd, Edison NJ',
     column: 'Installation',
     subState: 'Scheduled',
+    measureDate: '2026-09-16',
     installDate: '2026-09-24',
     installerId: 'ray',
     material: 'Mohawk carpet',
@@ -110,7 +111,7 @@ const seedJobs = [
   }),
   job({
     id: 'JOB-5005',
-    customer: 'Nick Hershey',
+    customer: 'Hershey, N.',
     firstName: 'Nick',
     lastName: 'Hershey',
     city: 'Edison NJ',
@@ -118,9 +119,12 @@ const seedJobs = [
     phone: '(732) 988-2347',
     column: 'Installation',
     subState: 'Complete',
-    date: '2026-09-17',
-    measureDate: '2026-09-17',
-    installDate: '2026-09-24',
+    date: '2026-09-10',
+    measureDate: '2026-09-10',
+    orderedDate: '2026-09-11',
+    eta: '2026-09-13',
+    installDate: '2026-09-17',
+    completedDate: '2026-09-17',
     installerId: 'tony',
     material: 'Shaw Secret Adventure',
     color: 'Shadow',
@@ -141,9 +145,14 @@ const seedJobs = [
     city: 'Edison NJ',
     address: '1100 Oak Tree Rd, Edison NJ',
     contact: 'Denise Ruiz, Property Manager',
-    column: 'Invoicing',
-    subState: 'Invoice received',
-    completedDate: '2026-09-22',
+    column: 'Installation',
+    subState: 'Complete',
+    date: '2026-09-09',
+    measureDate: '2026-09-09',
+    orderedDate: '2026-09-10',
+    eta: '2026-09-12',
+    installDate: '2026-09-16',
+    completedDate: '2026-09-16',
     installerId: 'ray',
     material: 'Shaw commercial carpet',
     areas: ['LR'],
@@ -166,7 +175,6 @@ function App() {
   const [stockOpen, setStockOpen] = useState(false)
   const [sendOpen, setSendOpen] = useState(false)
   const [highlightedId, setHighlightedId] = useState('')
-  const [paid, setPaid] = useState(false)
   const [guideOpen, setGuideOpen] = useState(true)
   const [guideStep, setGuideStep] = useState(0)
 
@@ -196,7 +204,7 @@ function App() {
   const guideSteps = [
     {
       title: 'Start with the board',
-      body: 'This board is the whole job lifecycle. Jobs move left to right from Estimation to Invoicing.',
+      body: 'This board is the job lifecycle before settle-up. Jobs move left to right from Estimation to Installation.',
       target: 'board',
       action: () => {
         setActiveNav('Jobs')
@@ -260,11 +268,11 @@ function App() {
       },
     },
     {
-      title: 'Settle up invoices',
-      body: 'Invoices is where the store records the installer invoice, checks exceptions, and queues the check.',
+      title: 'Settle up installer invoices',
+      body: 'Installer Invoices is where the store records weekly invoices sent in by each contractor.',
       target: 'invoices',
       action: () => {
-        setActiveNav('Invoices')
+        setActiveNav('Installer Invoices')
         setDrawerOpen(false)
       },
     },
@@ -301,7 +309,7 @@ function App() {
           {activeNav === 'Jobs' && view === 'Calendar' && <CalendarView jobs={jobs} openJob={openJob} openNewJob={() => setNewJobOpen(true)} guideTarget={activeGuideTarget} />}
           {activeNav === 'Calendar' && <CalendarView jobs={jobs} openJob={openJob} openNewJob={() => setNewJobOpen(true)} guideTarget={activeGuideTarget} />}
           {activeNav === 'Installers' && <InstallersScreen jobs={jobs} />}
-          {activeNav === 'Invoices' && <InvoicesScreen jobs={jobs} paid={paid} setPaid={setPaid} guideTarget={activeGuideTarget} />}
+          {activeNav === 'Installer Invoices' && <InvoicesScreen guideTarget={activeGuideTarget} />}
         </main>
       </div>
       {drawerOpen && (
@@ -394,7 +402,7 @@ function ModeSwitcher({ current }) {
 }
 
 function Sidebar({ activeNav, setActiveNav }) {
-  const items = ['Jobs', 'Calendar', 'Installers', 'Invoices']
+  const items = ['Jobs', 'Calendar', 'Installers', 'Installer Invoices']
   return (
     <aside className="flex w-[230px] shrink-0 flex-col border-r border-[#E5E7EB] bg-white">
       <div className="flex items-center justify-between px-4 py-4">
@@ -665,7 +673,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
               <FieldText label="Supplier" value={job.supplier} onChange={(value) => updateJob(job.id, { supplier: value })} />
               <FieldDate label="ETA" value={job.eta} onChange={(value) => updateJob(job.id, { eta: value })} />
             </div>
-            <Toggle label="Material received" checked={job.column === 'Installation' || job.column === 'Invoicing'} onChange={() => updateJob(job.id, { column: 'Installation', subState: 'Not scheduled' })} />
+            <Toggle label="Material received" checked={job.column === 'Installation'} onChange={() => updateJob(job.id, { column: 'Installation', subState: 'Not scheduled' })} />
           </DrawerSection>
           <DrawerSection id="installation" title="Installation">
             <FieldSelect label="Installer" value={job.installerId} options={installers.map((installer) => installer.id)} labels={Object.fromEntries(installers.map((installer) => [installer.id, installer.name]))} onChange={(value) => updateJob(job.id, { installerId: value })} />
@@ -792,19 +800,75 @@ function InstallersScreen({ jobs }) {
   return (
     <div className="grid grid-cols-[300px_1fr] gap-5">
       <section className="rounded-md border border-[#E5E7EB] bg-white p-3"><h2 className="px-2 pb-1 font-semibold">Installers</h2><p className="px-2 pb-3 text-sm text-[#71717A]">Installers are subcontractors, but long-tenured - 3-4 years on average.</p>{installers.map((installer) => <button key={installer.id} onClick={() => setSelectedId(installer.id)} className={`mb-1 w-full rounded-md px-3 py-3 text-left ${selectedId === installer.id ? 'bg-[#F1F1F4]' : 'hover:bg-[#FAFAFA]'}`}><p className="font-semibold">{installer.name}</p><p className="text-sm text-[#71717A]">{installer.type} · {installer.trade}</p></button>)}</section>
-      <section className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><h2 className="font-semibold">{selected.name}</h2><p className="text-sm text-[#71717A]">{selected.type} · {selected.email}</p></div><div className="grid grid-cols-[1fr_340px] gap-5 p-4"><div><table className="w-full text-left text-sm"><thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]"><tr><th className="py-2">Task</th><th>Unit</th><th>Rate</th></tr></thead><tbody>{rateCards[selectedId].map(([task, unit, rate]) => <tr key={task} className="border-b border-[#E5E7EB] last:border-0"><td className="py-2">{task}</td><td>{unit}</td><td><input defaultValue={rate.toFixed(2)} className="w-24 rounded-md border border-[#E5E7EB] px-2 py-1" /></td></tr>)}</tbody></table><p className="mt-4 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-3 text-sm text-[#71717A]">Carpet Place supplies flooring, wall base, transition strips, glue and pads. The installer supplies everything else.</p></div><div className="space-y-4"><MiniList title="Recent jobs" items={installerJobs.map((job) => `${job.id} · ${job.customer} · ${job.subState}`)} /><MiniList title="Past invoices" items={selected.type === 'Employee' ? ['Employee - paid through payroll'] : ['INV-4411 · Sep 15-19 · Paid', 'INV-4417 · Sep 22-26 · Received']} /></div></div></section>
+      <section className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><h2 className="font-semibold">{selected.name}</h2><p className="text-sm text-[#71717A]">{selected.type} · {selected.email}</p></div><div className="grid grid-cols-[1fr_340px] gap-5 p-4"><div><table className="w-full text-left text-sm"><thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]"><tr><th className="py-2">Task</th><th>Unit</th><th>Rate</th></tr></thead><tbody>{rateCards[selectedId].map(([task, unit, rate]) => <tr key={task} className="border-b border-[#E5E7EB] last:border-0"><td className="py-2">{task}</td><td>{unit}</td><td><input defaultValue={rate.toFixed(2)} className="w-24 rounded-md border border-[#E5E7EB] px-2 py-1" /></td></tr>)}</tbody></table><p className="mt-4 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-3 text-sm text-[#71717A]">Carpet Place supplies flooring, wall base, transition strips, glue and pads. The installer supplies everything else.</p></div><div className="space-y-4"><MiniList title="Recent jobs" items={installerJobs.map((job) => `${job.id} · ${job.customer} · ${job.subState}`)} /><MiniList title="Past invoices" items={['INV-4411 · Sep 15-19 · Paid', 'INV-4417 · Sep 22-26 · Received']} /></div></div></section>
     </div>
   )
 }
 
-function InvoicesScreen({ jobs, paid, setPaid, guideTarget }) {
-  const completed = jobs.filter((job) => job.column === 'Invoicing' || job.subState === 'Complete')
-  const greenbrook = jobs.find((job) => job.id === 'JOB-5008')
+function InvoicesScreen({ guideTarget }) {
+  const contractorInvoices = [
+    {
+      id: 'INV-4417',
+      contractor: 'Tony Vasquez',
+      week: 'Sep 14-18, 2026',
+      received: 'Sep 18',
+      status: 'Approved',
+      jobs: '2 jobs',
+      amount: 1980,
+    },
+    {
+      id: 'INV-4418',
+      contractor: 'Ray Morales',
+      week: 'Sep 14-18, 2026',
+      received: 'Sep 18',
+      status: 'Needs review',
+      jobs: '2 jobs',
+      amount: 2140,
+    },
+  ]
+
   return (
-    <div className={`grid grid-cols-[1fr_360px] gap-5 rounded-md ${tourRing(guideTarget, 'invoices')}`}>
-      <section className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><h2 className="font-semibold">Ray Morales · Sep 21-26</h2><p className="mt-1 text-sm text-[#71717A]">Invoice received Sep 26. The installer typed it up and sent it in weekly.</p>{paid && <p className="mt-3 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm font-semibold text-green-700">Check #4417 queued - $1,980.00 to Tony Vasquez</p>}</div><div className="space-y-5 p-4"><div className="rounded-md border border-[#E5E7EB]"><div className="border-b border-[#E5E7EB] bg-[#FAFAFA] px-4 py-3"><p className="font-semibold">{greenbrook.customer} <span className="font-normal text-[#71717A]">· Completed Sep 22</span></p><p className="text-sm text-[#71717A]">{greenbrook.address}</p></div><table className="w-full text-left text-sm"><thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]"><tr>{['Task', 'Work order', 'Invoiced', 'Rate', 'Amount'].map((head) => <th key={head} className="px-4 py-2 font-semibold">{head}</th>)}</tr></thead><tbody>{[['Install', '495 ft', '495 ft', '$1.70/ft', 841.5], ['Rip up old carpet & pad', '495 ft', '495 ft', '$0.80/ft', 396], ['Wall base / cove base', '75 ft', '75 ft', '$1.85/ft', 138.5], ['Leveler', '0 ft', '58 ft', '$2.40/ft', 140, true]].map(([task, workOrder, invoiced, rate, amount, added]) => <tr key={task} className={`border-b border-[#E5E7EB] last:border-0 ${added ? 'bg-[#FEF3C7] text-[#B45309]' : ''}`}><td className="px-4 py-2">{task}{added && <span className="ml-2 rounded bg-white/70 px-2 py-1 text-xs font-semibold">Added on site</span>}{added && <p className="mt-1 text-xs">Floor uneven - leveler required. Common on vinyl and wood.</p>}</td><td className="px-4 py-2">{workOrder}</td><td className="px-4 py-2 font-semibold">{invoiced}</td><td className="px-4 py-2">{rate}</td><td className="px-4 py-2 font-semibold">{money(amount)}</td></tr>)}</tbody></table></div><div className="rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4 font-semibold">Work orders $1,840.00 · Invoiced $1,980.00 · Difference $140.00</div><div className="flex justify-end gap-2"><button className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 font-semibold">Query line</button><button onClick={() => setPaid(true)} className="rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white">Approve & pay by check</button></div></div></section>
-      <aside className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><div className="flex items-center gap-2"><Icon name="Awaiting" /><h2 className="font-semibold">Awaiting invoice</h2></div><p className="mt-1 text-sm text-[#71717A]">5 completed jobs not yet invoiced.</p><div className="mt-3 rounded-md border border-[#E5E7EB] px-3 py-2 text-sm text-[#71717A]">Search</div><div className="mt-3 flex items-center justify-between text-sm"><label className="flex items-center gap-2 text-[#71717A]"><input type="checkbox" /> Select all</label><button className="rounded border border-[#E5E7EB] px-2 py-1">Completed: oldest ▾</button></div></div><div className="divide-y divide-[#E5E7EB]">{completed.map((job) => <div key={job.id} className="p-4 text-sm"><p className="font-semibold text-[#1E40AF]">{job.id} ↗ <span className="ml-2 text-[#18181B]">{job.customer}</span></p><p className="mt-2 font-semibold">◷ Completed {displayDate(job.completedDate || job.installDate)}</p><p className="mt-1 text-[#52525B]">⌖ {job.address}</p><p className="mt-1 text-[#52525B]">♙ {installerFor(job.installerId)?.name || 'Unassigned'}</p><p className="mt-2 text-[#71717A]">{job.size} · {job.lineItems.length} line items · {money(job.amount)}</p></div>)}</div></aside>
-    </div>
+    <section className={`rounded-md border border-[#E5E7EB] bg-white ${tourRing(guideTarget, 'invoices')}`}>
+      <div className="flex items-center justify-between border-b border-[#E5E7EB] p-4">
+        <div>
+          <h2 className="font-semibold">Installer Invoices</h2>
+          <p className="mt-1 text-sm text-[#71717A]">
+            Weekly invoices sent in by subcontractor installers, not customer invoices.
+          </p>
+        </div>
+        <button className="rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white">Record invoice</button>
+      </div>
+      <table className="w-full text-left text-sm">
+        <thead className="border-b border-[#E5E7EB] text-xs uppercase tracking-wide text-[#71717A]">
+          <tr>
+            {['Invoice', 'Contractor', 'Week', 'Received', 'Jobs', 'Amount', 'Approval'].map((heading) => (
+              <th key={heading} className="px-4 py-3 font-semibold">{heading}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {contractorInvoices.map((invoice) => (
+            <tr key={invoice.id} className="border-b border-[#E5E7EB] last:border-0 hover:bg-[#FAFAFA]">
+              <td className="px-4 py-4 font-semibold text-[#1E40AF]">{invoice.id}</td>
+              <td className="px-4 py-4 font-semibold">{invoice.contractor}</td>
+              <td className="px-4 py-4">{invoice.week}</td>
+              <td className="px-4 py-4 text-[#71717A]">{invoice.received}</td>
+              <td className="px-4 py-4 text-[#71717A]">{invoice.jobs}</td>
+              <td className="px-4 py-4 font-semibold">{money(invoice.amount)}</td>
+              <td className="px-4 py-4">
+                <span className={`rounded-full border px-2 py-1 text-xs font-semibold ${
+                  invoice.status === 'Approved'
+                    ? 'border-green-200 bg-green-50 text-green-700'
+                    : 'border-amber-200 bg-amber-50 text-amber-700'
+                }`}>
+                  {invoice.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
   )
 }
 

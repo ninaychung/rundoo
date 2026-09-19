@@ -32,6 +32,7 @@ function researchDirectoryIndex() {
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/rundoo/',
+  // GitHub Pages project URL is https://ninaychung.github.io/rundoo/
+  base: process.env.GITHUB_PAGES === 'true' ? '/rundoo/' : '/',
   plugins: [react(), tailwindcss(), researchDirectoryIndex()],
 })
