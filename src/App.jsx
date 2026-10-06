@@ -286,7 +286,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-[#FAFAFA] text-[#18181B]">
+    <div className="flex h-screen flex-col bg-snow text-smoke">
       <ModeSwitcher current="app" />
       <div className="relative flex min-h-0 flex-1">
       <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} />
@@ -354,7 +354,7 @@ function App() {
       ) : (
         <button
           onClick={() => setGuideOpen(true)}
-          className="fixed bottom-5 left-[250px] z-50 rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white"
+          className="fixed bottom-5 left-[250px] z-50 rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white"
         >
           Show guide
         </button>
@@ -371,17 +371,17 @@ function ModeSwitcher({ current }) {
   const researchHref = `${import.meta.env.BASE_URL}research/index.html`
 
   return (
-    <div className="sticky top-0 z-20 shrink-0 border-b border-[#E5E7EB] bg-white">
+    <div className="sticky top-0 z-20 shrink-0 border-b border-cobalt bg-cobalt">
       <div className="flex items-center justify-between px-4 py-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#71717A]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-snow">
           Rundoo
         </p>
-        <nav aria-label="Site mode" className="grid grid-cols-2 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-0.5 text-xs font-semibold">
+        <nav aria-label="Site mode" className="grid grid-cols-2 rounded-md border border-snow/40 bg-snow p-0.5 text-xs font-semibold">
           <a
             href={appHref}
             aria-current={current === 'app' ? 'page' : undefined}
             className={`rounded px-3 py-1.5 text-center ${
-              current === 'app' ? 'bg-[#18181B] text-white' : 'text-[#71717A] hover:text-[#18181B]'
+              current === 'app' ? 'bg-smoke text-white' : 'text-smoke hover:text-cobalt'
             }`}
           >
             App
@@ -390,7 +390,7 @@ function ModeSwitcher({ current }) {
             href={researchHref}
             aria-current={current === 'research' ? 'page' : undefined}
             className={`rounded px-3 py-1.5 text-center ${
-              current === 'research' ? 'bg-[#18181B] text-white' : 'text-[#71717A] hover:text-[#18181B]'
+              current === 'research' ? 'bg-smoke text-white' : 'text-smoke hover:text-cobalt'
             }`}
           >
             Research
@@ -407,7 +407,7 @@ function Sidebar({ activeNav, setActiveNav }) {
     <aside className="flex w-[230px] shrink-0 flex-col border-r border-[#E5E7EB] bg-white">
       <div className="flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#18181B] text-sm font-bold text-white">R</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cobalt text-sm font-bold text-white">R</div>
           <span className="font-semibold tracking-tight">Rundoo</span>
         </div>
         <button className="h-7 w-7 rounded border border-[#E5E7EB] text-lg leading-none">+</button>
@@ -418,7 +418,7 @@ function Sidebar({ activeNav, setActiveNav }) {
             key={item}
             onClick={() => setActiveNav(item)}
             className={`flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm ${
-              activeNav === item ? 'bg-[#F1F1F4] font-medium text-[#18181B]' : 'text-[#52525B] hover:bg-[#FAFAFA]'
+              activeNav === item ? 'bg-[#F1F1F4] font-medium text-smoke' : 'text-[#52525B] hover:bg-snow'
             }`}
           >
             <Icon name={item} />
@@ -436,14 +436,14 @@ function Sidebar({ activeNav, setActiveNav }) {
 
 function TopBar({ title, view, setView }) {
   return (
-    <header className="border-b border-[#E5E7EB] bg-[#FAFAFA] px-8 py-5">
+    <header className="border-b border-[#E5E7EB] bg-snow px-8 py-5">
       <div className="flex items-start justify-between">
         <div className="flex items-end gap-5">
           <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
           {title === 'Jobs' && (
             <div className="mb-1 flex gap-4 text-sm font-medium text-[#71717A]">
               {['Board', 'List', 'Calendar'].map((tab) => (
-                <button key={tab} onClick={() => setView(tab)} className={view === tab ? 'text-[#18181B]' : ''}>{tab}</button>
+                <button key={tab} onClick={() => setView(tab)} className={view === tab ? 'text-cobalt' : ''}>{tab}</button>
               ))}
             </div>
           )}
@@ -473,7 +473,7 @@ function Board({ jobs, draggedId, setDraggedId, moveJob, openJob, openNewJob, hi
           <div className="w-[420px] rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm text-[#71717A]">Search jobs</div>
           <button className="rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-medium">Sort: Install date ▾</button>
         </div>
-        <button onClick={openNewJob} className={`rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white ${tourRing(guideTarget, 'new-job')}`}>+ New job</button>
+        <button onClick={openNewJob} className={`rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white ${tourRing(guideTarget, 'new-job')}`}>+ New job</button>
       </div>
       <div className={`grid grid-cols-4 gap-4 rounded-md ${tourRing(guideTarget, 'board')}`}>
         {Object.keys(columns).map((column) => {
@@ -502,19 +502,19 @@ function Board({ jobs, draggedId, setDraggedId, moveJob, openJob, openNewJob, hi
   )
 }
 
-function JobCard({ job, openJob, setDraggedId, highlighted = false, compact = false, border = 'border-l-[#1D4ED8]' }) {
+function JobCard({ job, openJob, setDraggedId, highlighted = false, compact = false, border = 'border-l-cobalt' }) {
   const installer = installerFor(job.installerId)
   return (
     <button
       draggable
       onDragStart={() => setDraggedId?.(job.id)}
       onClick={() => openJob(job.id)}
-      className={`w-full rounded-md border border-l-[3px] ${border} border-[#E5E7EB] bg-[#EEF2FE] p-3 text-left transition ${
-        highlighted ? 'ring-2 ring-[#1D4ED8]' : ''
+      className={`w-full rounded-md border border-l-[3px] ${border} border-[#E5E7EB] bg-snow p-3 text-left transition ${
+        highlighted ? 'ring-2 ring-cobalt' : ''
       }`}
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="flex items-center gap-2 text-sm font-semibold text-[#1E40AF]"><span className="h-2 w-2 rounded-full bg-[#1D4ED8]" />{job.id}</p>
+        <p className="flex items-center gap-2 text-sm font-semibold text-cobalt"><span className="h-2 w-2 rounded-full bg-cobalt" />{job.id}</p>
         <span className="text-[10px] font-semibold uppercase tracking-wide text-[#71717A]">{job.subState}</span>
       </div>
       <p className="mt-2 font-semibold">{job.customer}</p>
@@ -534,12 +534,12 @@ function ListView({ jobs, openJob, openNewJob }) {
     <section className="rounded-md border border-[#E5E7EB] bg-white">
       <div className="flex items-center justify-between border-b border-[#E5E7EB] p-4">
         <div className="flex-1 rounded-md border border-[#E5E7EB] px-3 py-2 text-sm text-[#71717A]">Search jobs</div>
-        <button onClick={openNewJob} className="ml-3 rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white">+ New job</button>
+        <button onClick={openNewJob} className="ml-3 rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white">+ New job</button>
       </div>
       <div className="divide-y divide-[#E5E7EB]">
         {jobs.map((job) => (
-          <button key={job.id} onClick={() => openJob(job.id)} className="grid w-full grid-cols-[1fr_1fr_160px] gap-4 px-4 py-4 text-left hover:bg-[#FAFAFA]">
-            <div><p className="font-semibold text-[#1E40AF]">{job.id}</p><p className="font-semibold">{job.customer}</p><p className="text-sm text-[#71717A]">{job.address}</p></div>
+          <button key={job.id} onClick={() => openJob(job.id)} className="grid w-full grid-cols-[1fr_1fr_160px] gap-4 px-4 py-4 text-left hover:bg-snow">
+            <div><p className="font-semibold text-cobalt">{job.id}</p><p className="font-semibold">{job.customer}</p><p className="text-sm text-[#71717A]">{job.address}</p></div>
             <p className="text-sm text-[#71717A]">{job.column} · {job.subState}</p>
             <p className="text-right font-bold">{money(job.amount)}</p>
           </button>
@@ -558,20 +558,20 @@ function CalendarView({ jobs, openJob, openNewJob, guideTarget }) {
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-[#71717A]">
-          <span>‹</span><button className="rounded border border-[#E5E7EB] bg-white px-3 py-2 font-medium text-[#18181B]">Today</button><span>›</span>
-          <span className="ml-2 font-medium text-[#18181B]">Sep 21 – 27, 2026</span>
+          <span>‹</span><button className="rounded border border-[#E5E7EB] bg-white px-3 py-2 font-medium text-smoke">Today</button><span>›</span>
+          <span className="ml-2 font-medium text-smoke">Sep 21 – 27, 2026</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="rounded-md border border-[#E5E7EB] bg-white p-1 text-sm"><button className="rounded bg-[#F1F1F4] px-3 py-1.5">Week</button><button className="px-3 py-1.5 text-[#71717A]">Month</button></div>
-          <button onClick={openNewJob} className="rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white">+ New job</button>
+          <button onClick={openNewJob} className="rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white">+ New job</button>
         </div>
       </div>
       <div className={`grid min-h-[660px] grid-cols-7 rounded-md border border-[#E5E7EB] bg-white ${tourRing(guideTarget, 'calendar')}`}>
         {days.map(([day, date]) => (
-          <div key={date} className={`border-r border-[#E5E7EB] p-3 last:border-r-0 ${date === '24' ? 'bg-[#EEF2FE]/60' : ''}`}>
+          <div key={date} className={`border-r border-[#E5E7EB] p-3 last:border-r-0 ${date === '24' ? 'bg-snow/60' : ''}`}>
             <div className="mb-3 text-center">
               <p className="text-xs font-semibold text-[#71717A]">{day}</p>
-              <p className={`mx-auto mt-1 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${date === '24' ? 'bg-[#1D4ED8] text-white' : ''}`}>{date}</p>
+              <p className={`mx-auto mt-1 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${date === '24' ? 'bg-cobalt text-white' : ''}`}>{date}</p>
             </div>
             <div className="space-y-2">
               {events.filter((event) => event.day === date).map((event) => (
@@ -581,7 +581,7 @@ function CalendarView({ jobs, openJob, openNewJob, guideTarget }) {
           </div>
         ))}
       </div>
-      <p className="text-sm text-[#71717A]"><span className="text-green-700">Green</span> Measure · <span className="text-[#1D4ED8]">Blue</span> Install · <span className="text-amber-700">Amber</span> Material ETA</p>
+      <p className="text-sm text-[#71717A]"><span className="text-green-700">Green</span> Measure · <span className="text-cobalt">Blue</span> Install · <span className="text-amber-700">Amber</span> Material ETA</p>
     </section>
   )
 }
@@ -643,7 +643,7 @@ function NewJobModal({ expanded, setExpanded, close, createJob }) {
       <Totals totals={totalsFor(form.lines, form.deposit, form.delivery)} />
       <div className="mt-5 flex justify-end gap-2">
         <button onClick={close} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 font-semibold">Cancel</button>
-        <button onClick={submit} className="rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white">Create job</button>
+        <button onClick={submit} className="rounded-md bg-cobalt px-4 py-2 font-semibold text-white">Create job</button>
       </div>
     </Modal>
   )
@@ -656,7 +656,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
     <div className="absolute inset-0 z-40 flex justify-end bg-black/20">
       <aside className={`${expanded ? 'w-full' : 'w-[560px]'} flex h-full flex-col border-l border-[#E5E7EB] bg-white ${tourRing(guideTarget, 'drawer')}`}>
         <div className="flex items-start justify-between border-b border-[#E5E7EB] p-4">
-          <div><p className="font-semibold text-[#1E40AF]">{job.id}</p><h2 className="text-xl font-bold">{job.customer}</h2><StatusPill label={`${job.column} / ${job.subState}`} /></div>
+          <div><p className="font-semibold text-cobalt">{job.id}</p><h2 className="text-xl font-bold">{job.customer}</h2><StatusPill label={`${job.column} / ${job.subState}`} /></div>
           <div className="flex gap-2"><button onClick={() => setExpanded(!expanded)} className="rounded border border-[#E5E7EB] px-2 py-1">⤢</button><button onClick={close} className="rounded border border-[#E5E7EB] px-2 py-1">X</button></div>
         </div>
         <div className="flex-1 space-y-5 overflow-auto p-4">
@@ -667,7 +667,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
             <Toggle label="Estimation complete" checked={job.column !== 'Estimation'} onChange={() => updateJob(job.id, { column: 'Order', subState: 'Not ordered' })} />
           </DrawerSection>
           <DrawerSection id="order" title="Order">
-            <button onClick={openStock} className={`rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white ${tourRing(guideTarget, 'stock')}`}>Check stock & price</button>
+            <button onClick={openStock} className={`rounded-md bg-cobalt px-3 py-2 text-sm font-semibold text-white ${tourRing(guideTarget, 'stock')}`}>Check stock & price</button>
             <div className="mt-3 grid grid-cols-3 gap-3">
               <FieldDate label="Ordered date" value={job.orderedDate} onChange={(value) => updateJob(job.id, { orderedDate: value })} />
               <FieldText label="Supplier" value={job.supplier} onChange={(value) => updateJob(job.id, { supplier: value })} />
@@ -679,7 +679,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
             <FieldSelect label="Installer" value={job.installerId} options={installers.map((installer) => installer.id)} labels={Object.fromEntries(installers.map((installer) => [installer.id, installer.name]))} onChange={(value) => updateJob(job.id, { installerId: value })} />
             <FieldDate label="Install date" value={job.installDate} onChange={(value) => updateJob(job.id, { installDate: value })} />
             <button onClick={openSend} className={`mt-3 rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-semibold ${tourRing(guideTarget, 'send')}`}>Send work order</button>
-            <div className="mt-3 flex flex-wrap gap-2">{columns.Installation.map((state) => <button key={state} onClick={() => updateJob(job.id, { column: 'Installation', subState: state })} className={`rounded-full border px-3 py-1 text-sm ${job.subState === state && job.column === 'Installation' ? 'border-blue-200 bg-blue-50 text-[#1E40AF]' : 'border-[#E5E7EB] text-[#71717A]'}`}>{state}</button>)}</div>
+            <div className="mt-3 flex flex-wrap gap-2">{columns.Installation.map((state) => <button key={state} onClick={() => updateJob(job.id, { column: 'Installation', subState: state })} className={`rounded-full border px-3 py-1 text-sm ${job.subState === state && job.column === 'Installation' ? 'border-cobalt bg-snow text-cobalt' : 'border-[#E5E7EB] text-[#71717A]'}`}>{state}</button>)}</div>
           </DrawerSection>
           <EditableLines lines={job.lineItems} setLines={setLineItems} />
           <div className="grid grid-cols-2 gap-4">
@@ -698,7 +698,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
           <DrawerSection title="Payment">
             <div className="grid grid-cols-2 gap-3"><FieldText label="Initial deposit" value={job.totals.deposit} onChange={(value) => updateJob(job.id, { totals: { ...job.totals, deposit: Number(value), balance: job.totals.due - Number(value) } })} /><FieldText label="Balance" value={job.totals.balance} onChange={(value) => updateJob(job.id, { totals: { ...job.totals, balance: Number(value) } })} /></div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button className="rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white">Ring up order</button>
+              <button className="rounded-md bg-cobalt px-3 py-2 text-sm font-semibold text-white">Ring up order</button>
               <label className="flex items-center gap-2 rounded-md border border-[#E5E7EB] bg-white px-3 py-2 text-sm font-semibold">
                 <input type="checkbox" checked={job.paymentMethod === 'check'} onChange={() => updateJob(job.id, { paymentMethod: job.paymentMethod === 'check' ? '' : 'check' })} />
                 Customer paid by check
@@ -710,7 +710,7 @@ function JobDrawer({ job, expanded, setExpanded, close, updateJob, openStock, op
             </div>
           </DrawerSection>
         </div>
-        <div className="flex justify-between border-t border-[#E5E7EB] bg-white p-4"><button className="text-sm font-semibold text-[#71717A]">Delete</button><button onClick={close} className="rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white">Save</button></div>
+        <div className="flex justify-between border-t border-[#E5E7EB] bg-white p-4"><button className="text-sm font-semibold text-[#71717A]">Delete</button><button onClick={close} className="rounded-md bg-cobalt px-4 py-2 font-semibold text-white">Save</button></div>
       </aside>
     </div>
   )
@@ -720,9 +720,9 @@ function EditableLines({ lines, setLines }) {
   const update = (index, patch) => setLines(lines.map((lineItem, itemIndex) => itemIndex === index ? { ...lineItem, ...patch, amount: calcAmount({ ...lineItem, ...patch }) } : lineItem))
   return (
     <div className="mt-5">
-      <div className="mb-2 flex items-center justify-between"><p className="text-sm font-semibold">Line items</p><button onClick={() => setLines([...lines, emptyLine()])} className="text-sm font-semibold text-[#1E40AF]">+ Add line</button></div>
+      <div className="mb-2 flex items-center justify-between"><p className="text-sm font-semibold">Line items</p><button onClick={() => setLines([...lines, emptyLine()])} className="text-sm font-semibold text-cobalt">+ Add line</button></div>
       <table className="w-full text-left text-sm">
-        <thead className="border-y border-[#E5E7EB] bg-[#FAFAFA] text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft', 'Unit price', 'Amount'].map((head) => <th key={head} className="px-2 py-2">{head}</th>)}</tr></thead>
+        <thead className="border-y border-[#E5E7EB] bg-snow text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft', 'Unit price', 'Amount'].map((head) => <th key={head} className="px-2 py-2">{head}</th>)}</tr></thead>
         <tbody>{lines.map((lineItem, index) => <tr key={index} className="border-b border-[#E5E7EB]">
           <td className="px-2 py-2"><input value={lineItem.material} onChange={(event) => update(index, { material: event.target.value })} className="w-full rounded border border-[#E5E7EB] px-2 py-1" /></td>
           <td className="px-2 py-2"><input value={lineItem.color} onChange={(event) => update(index, { color: event.target.value })} className="w-full rounded border border-[#E5E7EB] px-2 py-1" /></td>
@@ -768,10 +768,10 @@ function StockModal({ close }) {
     <Modal wide>
       <ModalHeader title="Check stock & price" />
       <p className="mt-2 text-sm text-[#71717A]">Live from Dixie Group / Masland - account 152047 CARPET PLACE INC.</p>
-      <div className="mt-5 flex gap-2"><button className="rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white">Broadloom Carpet</button><button className="rounded-md border border-[#E5E7EB] px-3 py-2 text-sm font-semibold">Hard Surface</button></div>
+      <div className="mt-5 flex gap-2"><button className="rounded-md bg-cobalt px-3 py-2 text-sm font-semibold text-white">Broadloom Carpet</button><button className="rounded-md border border-[#E5E7EB] px-3 py-2 text-sm font-semibold">Hard Surface</button></div>
       <div className="mt-4 grid grid-cols-2 gap-4"><FieldText label="Style" value="BUENA VIDA - 9680" readOnly /><FieldText label="Color" value="BOTA-00857" readOnly /></div>
-      <div className="mt-4 grid grid-cols-2 gap-3 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4 text-sm">{[['Width', '12 ft'], ['Pattern repeat', '18.00 in x 18.00 in'], ['Fiber', 'NYLON 66'], ['Unit price', '$27.49 / sy']].map(([label, value]) => <Spec key={label} label={label} value={value} />)}</div>
-      <button onClick={() => setChecked(true)} className="mt-4 rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white">Check Stock & Reserve</button>
+      <div className="mt-4 grid grid-cols-2 gap-3 rounded-md border border-[#E5E7EB] bg-snow p-4 text-sm">{[['Width', '12 ft'], ['Pattern repeat', '18.00 in x 18.00 in'], ['Fiber', 'NYLON 66'], ['Unit price', '$27.49 / sy']].map(([label, value]) => <Spec key={label} label={label} value={value} />)}</div>
+      <button onClick={() => setChecked(true)} className="mt-4 rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white">Check Stock & Reserve</button>
       {checked && <p className="mt-3 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm font-semibold text-green-700">In stock - 3 rolls, ETA Sep 24</p>}
       <div className="mt-5 rounded-md border border-[#E5E7EB] p-4"><div className="flex items-center justify-between"><p className="font-semibold">Quoted $5.96/ft</p><div className="flex items-center gap-2"><button onClick={() => setDiscount(Math.max(0, discount - 0.03))} className="h-8 w-8 rounded border border-[#E5E7EB]">-</button><span className="w-20 text-center text-sm">{money(discount)} off</span><button onClick={() => setDiscount(discount + 0.03)} className="h-8 w-8 rounded border border-[#E5E7EB]">+</button></div></div><p className="mt-2 text-sm text-[#71717A]">Resulting margin {Math.round(((5.96 - discount - 4.12) / (5.96 - discount)) * 100)}%. Negotiated on ~90% of jobs.</p></div>
       <ModalFooter close={close} action={close} actionLabel="Add to job" />
@@ -799,8 +799,8 @@ function InstallersScreen({ jobs }) {
   const installerJobs = jobs.filter((job) => job.installerId === selectedId)
   return (
     <div className="grid grid-cols-[300px_1fr] gap-5">
-      <section className="rounded-md border border-[#E5E7EB] bg-white p-3"><h2 className="px-2 pb-1 font-semibold">Installers</h2><p className="px-2 pb-3 text-sm text-[#71717A]">Installers are subcontractors, but long-tenured - 3-4 years on average.</p>{installers.map((installer) => <button key={installer.id} onClick={() => setSelectedId(installer.id)} className={`mb-1 w-full rounded-md px-3 py-3 text-left ${selectedId === installer.id ? 'bg-[#F1F1F4]' : 'hover:bg-[#FAFAFA]'}`}><p className="font-semibold">{installer.name}</p><p className="text-sm text-[#71717A]">{installer.type} · {installer.trade}</p></button>)}</section>
-      <section className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><h2 className="font-semibold">{selected.name}</h2><p className="text-sm text-[#71717A]">{selected.type} · {selected.email}</p></div><div className="grid grid-cols-[1fr_340px] gap-5 p-4"><div><table className="w-full text-left text-sm"><thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]"><tr><th className="py-2">Task</th><th>Unit</th><th>Rate</th></tr></thead><tbody>{rateCards[selectedId].map(([task, unit, rate]) => <tr key={task} className="border-b border-[#E5E7EB] last:border-0"><td className="py-2">{task}</td><td>{unit}</td><td><input defaultValue={rate.toFixed(2)} className="w-24 rounded-md border border-[#E5E7EB] px-2 py-1" /></td></tr>)}</tbody></table><p className="mt-4 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-3 text-sm text-[#71717A]">Carpet Place supplies flooring, wall base, transition strips, glue and pads. The installer supplies everything else.</p></div><div className="space-y-4"><MiniList title="Recent jobs" items={installerJobs.map((job) => `${job.id} · ${job.customer} · ${job.subState}`)} /><MiniList title="Past invoices" items={['INV-4411 · Sep 15-19 · Paid', 'INV-4417 · Sep 22-26 · Received']} /></div></div></section>
+      <section className="rounded-md border border-[#E5E7EB] bg-white p-3"><h2 className="px-2 pb-1 font-semibold">Installers</h2><p className="px-2 pb-3 text-sm text-[#71717A]">Installers are subcontractors, but long-tenured - 3-4 years on average.</p>{installers.map((installer) => <button key={installer.id} onClick={() => setSelectedId(installer.id)} className={`mb-1 w-full rounded-md px-3 py-3 text-left ${selectedId === installer.id ? 'bg-[#F1F1F4]' : 'hover:bg-snow'}`}><p className="font-semibold">{installer.name}</p><p className="text-sm text-[#71717A]">{installer.type} · {installer.trade}</p></button>)}</section>
+      <section className="rounded-md border border-[#E5E7EB] bg-white"><div className="border-b border-[#E5E7EB] p-4"><h2 className="font-semibold">{selected.name}</h2><p className="text-sm text-[#71717A]">{selected.type} · {selected.email}</p></div><div className="grid grid-cols-[1fr_340px] gap-5 p-4"><div><table className="w-full text-left text-sm"><thead className="border-b border-[#E5E7EB] text-xs uppercase text-[#71717A]"><tr><th className="py-2">Task</th><th>Unit</th><th>Rate</th></tr></thead><tbody>{rateCards[selectedId].map(([task, unit, rate]) => <tr key={task} className="border-b border-[#E5E7EB] last:border-0"><td className="py-2">{task}</td><td>{unit}</td><td><input defaultValue={rate.toFixed(2)} className="w-24 rounded-md border border-[#E5E7EB] px-2 py-1" /></td></tr>)}</tbody></table><p className="mt-4 rounded-md border border-[#E5E7EB] bg-snow p-3 text-sm text-[#71717A]">Carpet Place supplies flooring, wall base, transition strips, glue and pads. The installer supplies everything else.</p></div><div className="space-y-4"><MiniList title="Recent jobs" items={installerJobs.map((job) => `${job.id} · ${job.customer} · ${job.subState}`)} /><MiniList title="Past invoices" items={['INV-4411 · Sep 15-19 · Paid', 'INV-4417 · Sep 22-26 · Received']} /></div></div></section>
     </div>
   )
 }
@@ -836,7 +836,7 @@ function InvoicesScreen({ guideTarget }) {
             Weekly invoices sent in by subcontractor installers, not customer invoices.
           </p>
         </div>
-        <button className="rounded-md bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white">Record invoice</button>
+        <button className="rounded-md bg-cobalt px-4 py-2 text-sm font-semibold text-white">Record invoice</button>
       </div>
       <table className="w-full text-left text-sm">
         <thead className="border-b border-[#E5E7EB] text-xs uppercase tracking-wide text-[#71717A]">
@@ -848,8 +848,8 @@ function InvoicesScreen({ guideTarget }) {
         </thead>
         <tbody>
           {contractorInvoices.map((invoice) => (
-            <tr key={invoice.id} className="border-b border-[#E5E7EB] last:border-0 hover:bg-[#FAFAFA]">
-              <td className="px-4 py-4 font-semibold text-[#1E40AF]">{invoice.id}</td>
+            <tr key={invoice.id} className="border-b border-[#E5E7EB] last:border-0 hover:bg-snow">
+              <td className="px-4 py-4 font-semibold text-cobalt">{invoice.id}</td>
               <td className="px-4 py-4 font-semibold">{invoice.contractor}</td>
               <td className="px-4 py-4">{invoice.week}</td>
               <td className="px-4 py-4 text-[#71717A]">{invoice.received}</td>
@@ -873,11 +873,11 @@ function InvoicesScreen({ guideTarget }) {
 }
 
 function PaperHeader({ job }) {
-  return <div className="mb-4 grid grid-cols-2 gap-4 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4 text-sm"><div className="grid grid-cols-2 gap-x-4 gap-y-2"><Spec label="Customer last name" value={job.lastName} /><Spec label="First name" value={job.firstName} /><Spec label="Address" value={job.address} /><Spec label="Apt #" value={job.apt || '-'} /><Spec label="City, State / Zip" value={job.city} /><Spec label="Phone" value={job.phone} /><Spec label="B. Phone" value={job.businessPhone || '-'} /></div><div className="grid grid-cols-2 gap-x-4 gap-y-2"><Spec label="Date" value={displayDate(job.date)} /><Spec label="Date of measure" value={displayDate(job.measureDate)} /><Spec label="Date of installation" value={displayDate(job.installDate)} /><Spec label="Salesperson" value={job.salesperson} /></div></div>
+  return <div className="mb-4 grid grid-cols-2 gap-4 rounded-md border border-[#E5E7EB] bg-snow p-4 text-sm"><div className="grid grid-cols-2 gap-x-4 gap-y-2"><Spec label="Customer last name" value={job.lastName} /><Spec label="First name" value={job.firstName} /><Spec label="Address" value={job.address} /><Spec label="Apt #" value={job.apt || '-'} /><Spec label="City, State / Zip" value={job.city} /><Spec label="Phone" value={job.phone} /><Spec label="B. Phone" value={job.businessPhone || '-'} /></div><div className="grid grid-cols-2 gap-x-4 gap-y-2"><Spec label="Date" value={displayDate(job.date)} /><Spec label="Date of measure" value={displayDate(job.measureDate)} /><Spec label="Date of installation" value={displayDate(job.installDate)} /><Spec label="Salesperson" value={job.salesperson} /></div></div>
 }
 
 function WorkOrderTable({ job, hidePrices = false }) {
-  return <table className="w-full text-left text-sm"><thead className="border-y border-[#E5E7EB] bg-[#FAFAFA] text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft'].map((head) => <th key={head} className="px-3 py-2">{head}</th>)}{!hidePrices && <th className="px-3 py-2">Unit price</th>}{!hidePrices && <th className="px-3 py-2 text-right">Amount</th>}</tr></thead><tbody>{job.lineItems.map((item) => <tr key={item.material} className="border-b border-[#E5E7EB]"><td className="px-3 py-3 font-medium">{item.material}</td><td className="px-3 py-3">{item.color}</td><td className="px-3 py-3"><span title="LR living room · DR dining room · MBR main bedroom · BR1 bedroom 1 · BR2 bedroom 2 · FR family room">{formatAreas(item.areas)}</span></td><td className="px-3 py-3">{item.size}</td><td className="px-3 py-3">{item.ydsFt}</td>{!hidePrices && <td className="px-3 py-3">{item.unitPrice ? money(Number(item.unitPrice)) : ''}</td>}{!hidePrices && <td className="px-3 py-3 text-right font-semibold">{money(Number(item.amount) || 0)}</td>}</tr>)}</tbody></table>
+  return <table className="w-full text-left text-sm"><thead className="border-y border-[#E5E7EB] bg-snow text-xs uppercase text-[#71717A]"><tr>{['Material description', 'Color', 'Work areas', 'Size', 'Yds ft'].map((head) => <th key={head} className="px-3 py-2">{head}</th>)}{!hidePrices && <th className="px-3 py-2">Unit price</th>}{!hidePrices && <th className="px-3 py-2 text-right">Amount</th>}</tr></thead><tbody>{job.lineItems.map((item) => <tr key={item.material} className="border-b border-[#E5E7EB]"><td className="px-3 py-3 font-medium">{item.material}</td><td className="px-3 py-3">{item.color}</td><td className="px-3 py-3"><span title="LR living room · DR dining room · MBR main bedroom · BR1 bedroom 1 · BR2 bedroom 2 · FR family room">{formatAreas(item.areas)}</span></td><td className="px-3 py-3">{item.size}</td><td className="px-3 py-3">{item.ydsFt}</td>{!hidePrices && <td className="px-3 py-3">{item.unitPrice ? money(Number(item.unitPrice)) : ''}</td>}{!hidePrices && <td className="px-3 py-3 text-right font-semibold">{money(Number(item.amount) || 0)}</td>}</tr>)}</tbody></table>
 }
 
 function Modal({ children, wide = false, expanded = false }) {
@@ -889,7 +889,7 @@ function ModalHeader({ title, expanded, setExpanded }) {
 }
 
 function ModalFooter({ close, action, actionLabel }) {
-  return <div className="mt-6 flex justify-end gap-2"><button onClick={close} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 font-semibold">Cancel</button><button onClick={action} className="rounded-md bg-[#1D4ED8] px-4 py-2 font-semibold text-white">{actionLabel}</button></div>
+  return <div className="mt-6 flex justify-end gap-2"><button onClick={close} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 font-semibold">Cancel</button><button onClick={action} className="rounded-md bg-cobalt px-4 py-2 font-semibold text-white">{actionLabel}</button></div>
 }
 
 function TextInput({ label, field, form, setForm, required = false, type = 'text', touched, setTouched }) {
@@ -920,8 +920,8 @@ function Toggle({ label, checked, onChange }) {
     >
       <span>{label}</span>
       <span className="flex items-center gap-2">
-        <span className={checked ? 'text-[#1E40AF]' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
-        <span className={`flex h-6 w-11 items-center rounded-full p-0.5 transition ${checked ? 'bg-[#1D4ED8]' : 'bg-[#D4D4D8]'}`}>
+        <span className={checked ? 'text-cobalt' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
+        <span className={`flex h-6 w-11 items-center rounded-full p-0.5 transition ${checked ? 'bg-cobalt' : 'bg-[#D4D4D8]'}`}>
           <span className={`h-5 w-5 rounded-full bg-white transition ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
         </span>
       </span>
@@ -940,8 +940,8 @@ function MiniToggle({ label, checked, onChange }) {
     >
       <span>{label}</span>
       <span className="flex items-center gap-2">
-        <span className={checked ? 'text-[#1E40AF]' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
-        <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${checked ? 'bg-[#1D4ED8]' : 'bg-[#D4D4D8]'}`}>
+        <span className={checked ? 'text-cobalt' : 'text-[#71717A]'}>{checked ? 'Yes' : 'No'}</span>
+        <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${checked ? 'bg-cobalt' : 'bg-[#D4D4D8]'}`}>
           <span className={`h-4 w-4 rounded-full bg-white transition ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
         </span>
       </span>
@@ -958,11 +958,11 @@ function CompactStageTracker({ current }) {
   const currentIndex = stageIndex(current)
   const progress = `${(currentIndex / (stages.length - 1)) * 100}%`
   return (
-    <div className="rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4">
+    <div className="rounded-md border border-[#E5E7EB] bg-snow p-4">
       <div className="relative">
         <div className="absolute left-0 right-0 top-4 h-2 rounded-full bg-[#E5E7EB]" />
         <div
-          className="absolute left-0 top-4 h-2 rounded-full bg-gradient-to-r from-[#1D4ED8] to-[#93C5FD]"
+          className="absolute left-0 top-4 h-2 rounded-full bg-cobalt"
           style={{ width: progress }}
         />
         <div className="relative grid grid-cols-4 gap-2">
@@ -978,15 +978,15 @@ function CompactStageTracker({ current }) {
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold ${
                     complete
-                      ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white'
+                      ? 'border-cobalt bg-cobalt text-white'
                       : active
-                        ? 'border-[#1D4ED8] bg-white text-[#1D4ED8]'
+                        ? 'border-cobalt bg-white text-cobalt'
                         : 'border-[#D4D4D8] bg-white text-[#71717A]'
                   }`}
                 >
                   {complete ? '✓' : index + 1}
                 </span>
-                <span className={`text-xs font-semibold ${active ? 'text-[#1D4ED8]' : complete ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
+                <span className={`text-xs font-semibold ${active ? 'text-cobalt' : complete ? 'text-smoke' : 'text-[#71717A]'}`}>
                   {stage}
                 </span>
               </button>
@@ -999,7 +999,7 @@ function CompactStageTracker({ current }) {
 }
 
 function Totals({ totals }) {
-  return <div className="mt-5 ml-auto w-80 rounded-md border border-[#E5E7EB] bg-[#FAFAFA] p-4 text-sm">{[['Amount of sale', totals.sale], ['Sales tax (6.625%)', totals.tax], ['Delivery charge', totals.delivery], ['Total due', totals.due], ['Initial deposit', totals.deposit], ['Balance', totals.balance]].map(([label, value]) => <div key={label} className="flex justify-between py-1"><span className="text-[#71717A]">{label}</span><span className="font-semibold">{money(Number(value) || 0)}</span></div>)}</div>
+  return <div className="mt-5 ml-auto w-80 rounded-md border border-[#E5E7EB] bg-snow p-4 text-sm">{[['Amount of sale', totals.sale], ['Sales tax (6.625%)', totals.tax], ['Delivery charge', totals.delivery], ['Total due', totals.due], ['Initial deposit', totals.deposit], ['Balance', totals.balance]].map(([label, value]) => <div key={label} className="flex justify-between py-1"><span className="text-[#71717A]">{label}</span><span className="font-semibold">{money(Number(value) || 0)}</span></div>)}</div>
 }
 
 function MiniList({ title, items }) {
@@ -1007,7 +1007,7 @@ function MiniList({ title, items }) {
 }
 
 function StatusPill({ label }) {
-  return <span className="mt-2 inline-flex rounded-full border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-semibold text-[#1E40AF]">{label}</span>
+  return <span className="mt-2 inline-flex rounded-full border border-cobalt bg-snow px-2 py-1 text-xs font-semibold text-cobalt">{label}</span>
 }
 
 function DemoGuide({ step, steps, next, previous, close }) {
@@ -1039,7 +1039,7 @@ function DemoGuide({ step, steps, next, previous, close }) {
           </button>
           <button
             onClick={isLast ? close : next}
-            className="rounded-md bg-[#1D4ED8] px-3 py-2 text-sm font-semibold text-white"
+            className="rounded-md bg-cobalt px-3 py-2 text-sm font-semibold text-white"
           >
             {isLast ? 'Done' : 'Next'}
           </button>
@@ -1154,7 +1154,7 @@ function calendarEvents(jobs) {
   return jobs.flatMap((jobItem) => {
     const events = []
     if (jobItem.measureDate) events.push({ type: 'measure', day: dayOf(jobItem.measureDate), border: 'border-l-green-600', job: jobItem })
-    if (jobItem.installDate) events.push({ type: 'install', day: dayOf(jobItem.installDate), border: 'border-l-[#1D4ED8]', job: jobItem })
+    if (jobItem.installDate) events.push({ type: 'install', day: dayOf(jobItem.installDate), border: 'border-l-cobalt', job: jobItem })
     if (jobItem.eta) events.push({ type: 'eta', day: dayOf(jobItem.eta), border: 'border-l-amber-600', job: jobItem })
     return events
   })
@@ -1176,7 +1176,7 @@ function labelFor(field) {
 }
 
 function tourRing(activeTarget, target) {
-  return activeTarget === target ? 'ring-2 ring-[#1D4ED8] ring-offset-2 ring-offset-[#FAFAFA]' : ''
+  return activeTarget === target ? 'ring-2 ring-cobalt ring-offset-2 ring-offset-snow' : ''
 }
 
 export default App

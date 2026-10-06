@@ -1,11 +1,18 @@
 @import "tailwindcss";
 
+/* https://rundoo.ai/brand/ — Cobalt #3431D8, Smoke #171412, Snow #FBF5F3 */
+@theme {
+  --color-cobalt: #3431d8;
+  --color-smoke: #171412;
+  --color-snow: #fbf5f3;
+}
+
 :root {
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  color: #18181b;
-  background: #fafafa;
+  color: #171412;
+  background: #fbf5f3;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,7 +27,7 @@ body {
   min-width: 1180px;
   min-height: 100vh;
   margin: 0;
-  background: #fafafa;
+  background: #fbf5f3;
 }
 
 button,
